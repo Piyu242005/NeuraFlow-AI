@@ -194,7 +194,7 @@ enable_tools = st.checkbox(
 )
 show_reasoning = st.checkbox(
     "☑ Show Agent Reasoning",
-    value=True,
+    value=False,
     help="Streams the Agent's internal Thought and Action process.",
 )
 
@@ -432,6 +432,28 @@ if final_q:
             )
             if mem_ctx:
                 prompt += f"Recent Conversation History:\n{mem_ctx}\n\n"
+
+            prompt += (
+                "### FORMATTING RULES ###\n"
+                "Your response must be professional, concise, accurate, and user-focused.\n"
+                "Use short paragraphs, bullet points when appropriate, and headings for long answers.\n"
+                "Default style: Short, professional, direct (max 3 short paragraphs or 5 bullet points).\n"
+                "If the user asks to summarize a PDF, format exactly as:\n"
+                "📄 Document Summary\n\n"
+                "Overview:\n<2-3 sentence summary>\n\n"
+                "Key Points:\n"
+                "• Point 1\n"
+                "• Point 2\n"
+                "• Point 3\n\n"
+                "Conclusion:\n<short conclusion>\n\n"
+                "If the user asks 'What should I do?' or similar action-based questions, format exactly as:\n"
+                "📌 Recommended Actions\n\n"
+                "1. Action One\n"
+                "2. Action Two\n"
+                "3. Action Three\n\n"
+                "Priority:\nHigh / Medium / Low\n\n"
+                "If none of the above apply, simply provide the answer directly.\n\n"
+            )
 
             prompt += f"Current Question:\n{final_q}"
 
