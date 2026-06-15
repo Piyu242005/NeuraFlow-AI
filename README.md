@@ -1,9 +1,11 @@
 ![CI](https://github.com/Piyu242005/NeuraFlow-AI/actions/workflows/ci.yml/badge.svg)
 <div align="center">
 
-# 🧠 NeuraFlow AI
+<img src="./assets/AI.svg" width="150" alt="NeuraFlow AI Logo">
 
-**Enterprise RAG & Multi-LLM Document Intelligence Platform**
+# NeuraFlow AI
+
+**Enterprise RAG & Autonomous Multi-LLM Document Intelligence Platform**
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=20&pause=1000&color=8B5CF6&center=true&vCenter=true&width=600&lines=Analyze+PDFs+with+Generative+AI;Smart+Routing+Between+Top+LLMs;Production-Grade+AI+Architecture;Fast%2C+Accurate%2C+and+Cost-Effective)](https://git.io/typing-svg)
 
@@ -24,19 +26,9 @@
 
 ## 📝 Overview
 
-**NeuraFlow AI – Enterprise RAG & Autonomous Multi-LLM Agent Platform**
-
-Engineered an autonomous AI Agent platform integrating Enterprise RAG, ChromaDB vector search, conversation memory, real-time streaming responses, multi-LLM orchestration, intelligent tool calling (multi-provider web search via Tavily/DuckDuckGo, document retrieval, calculator), telemetry monitoring, and analytics dashboards for scalable document intelligence and reasoning workflows.
+**NeuraFlow AI** is a production-grade autonomous AI Agent platform. It integrates Enterprise Retrieval-Augmented Generation (RAG), ChromaDB vector search, persistent conversation memory, and real-time streaming responses into a unified ecosystem. By orchestrating multiple leading LLMs and utilizing intelligent tool calling (such as multi-provider web search via Tavily/DuckDuckGo, document retrieval, and advanced calculation), NeuraFlow AI delivers scalable, accurate, and cost-effective document intelligence and reasoning workflows.
 
 ---
-
-## 📡 Telegram Monitoring
-
-- Real-time upload notifications
-- Query analytics tracking
-- Provider performance monitoring
-- Error and fallback alerts
-- Non-blocking background execution
 
 ## ✨ Key Features
 
@@ -45,11 +37,11 @@ Engineered an autonomous AI Agent platform integrating Enterprise RAG, ChromaDB 
 | 🔀 **Multi-LLM Architecture** | Unified interface combining models from Groq, Google, OpenRouter, and Hugging Face. |
 | 🧠 **Intelligent Agent Routing** | Automatically classifies queries (Coding, Reasoning, General) to pick the best model. |
 | 🛡️ **Automatic Fallback System** | Seamlessly reroutes failed API requests (e.g., 429 Quota limits) to backup providers. |
-| 📄 **PDF Document Analysis** | Extracts and processes text from large PDF documents using `pypdf`. |
-| 🔍 **AI Decision Transparency** | An expander panel reveals *why* a model was chosen, token usage, and latency. |
+| 📄 **PDF Document Analysis** | Extracts, vectorizes, and processes text from large PDF documents using `pypdf` and ChromaDB. |
+| 🔍 **AI Decision Transparency** | An expander panel reveals *why* a model was chosen, token usage, and latency metrics. |
 | ⚡ **Real-Time Model Selection** | Toggle between "Auto Agent" mode or manually force a specific LLM to respond. |
-| 🎨 **Modern UI/UX** | Premium Dark-mode Streamlit interface with glassmorphism effects and animations. |
-| 🔒 **Secure API Management** | Hybrid `.env` and `st.secrets` integration for secure local and cloud deployments. |
+| 📡 **Advanced Telemetry** | Real-time Telegram notifications for document uploads, analytics tracking, and fallback alerts. |
+| 🎨 **Modern UI/UX** | Premium Dark-mode Streamlit interface with glassmorphism effects and fluid animations. |
 
 ---
 
@@ -89,9 +81,31 @@ graph TD
 | **Frontend** | ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white) HTML5, CSS3 |
 | **Backend** | ![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=flat-square&logo=python&logoColor=white) |
 | **AI Models** | ![Gemini](https://img.shields.io/badge/Gemini_1.5_Flash-4285F4?style=flat-square&logo=google&logoColor=white) ![Groq](https://img.shields.io/badge/Groq_LLaMA_3.1-F55036?style=flat-square&logo=groq&logoColor=white) ![OpenRouter](https://img.shields.io/badge/OpenRouter-10B981?style=flat-square) ![HuggingFace](https://img.shields.io/badge/Zephyr_7B-FFD21E?style=flat-square&logo=huggingface&logoColor=black) |
-| **Tooling** | `PyPDF`, `python-dotenv`, `requests`, `pytest`, `flake8`, `black` |
+| **Tooling** | `PyPDF`, `ChromaDB`, `requests`, `pytest`, `flake8`, `black` |
 
 </div>
+
+---
+
+## 🛠️ DevOps & Enterprise Infrastructure
+
+NeuraFlow AI is built with production-grade reliability, containerization, and scaling in mind.
+
+- **🐳 Docker**: Multi-stage, non-root user image optimized with layer caching and slim Python 3.11 base.
+- **☸️ Kubernetes**: Fully orchestrated deployment featuring:
+  - Rolling updates with 3 minimum replicas
+  - `HorizontalPodAutoscaler` (HPA) configured to auto-scale up to 10 pods based on 70% CPU usage
+  - Secure API Key management using Kubernetes Secrets
+  - Nginx Ingress routing (`neuraflow.ai`) with Strict Security Headers and HTTPS support
+- **🔄 CI/CD (GitHub Actions)**:
+  - Automated Linting (`flake8`, `black`, `isort`) and Security Scanning (`bandit`)
+  - Automated `pytest` unit testing
+  - Container build and push pipeline (`docker-build.yml`)
+  - Automated Kubernetes manifest validation (`k8s-validate.yml`)
+- **📈 Monitoring & Reliability**:
+  - Live HTTP health and readiness probes (`/_stcore/health`)
+  - Prometheus metrics configuration for node and pod monitoring
+  - Automatic fallback execution logic if an API endpoint goes down
 
 ---
 
@@ -101,19 +115,18 @@ graph TD
 AI-DOC-ASSISTANT/
 ├── .github/workflows/   # CI/CD Pipeline (Linting, Tests, Security)
 ├── assets/              # Premium SVGs, GIFs, and Logos
+├── k8s/                 # Kubernetes Manifests (Deployments, Services, HPA)
+├── monitoring/          # Prometheus & Grafana configurations
 ├── providers/           # Modular LLM Provider Interfaces
-│   ├── base_provider.py
-│   ├── gemini_provider.py
-│   ├── groq_provider.py
-│   ├── huggingface_provider.py
-│   └── openrouter_provider.py
 ├── services/            # Core Engine & Routing Logic
 │   ├── agent_engine.py      # Orchestration
 │   ├── ai_router.py         # Factory
 │   ├── fallback_manager.py  # Chain-of-Responsibility
+│   ├── memory_manager.py    # Conversation Memory
+│   ├── rag_engine.py        # Vector Search & Retrieval
+│   ├── telegram_logger.py   # Telemetry & Monitoring
 │   └── task_classifier.py   # Intent Analysis
 ├── utils/               # UI Helpers & Formatting
-│   └── helpers.py
 ├── app.py               # Main Streamlit Interface
 ├── styles.py            # Global CSS / Design System
 ├── requirements.txt     # Dependencies
@@ -148,6 +161,8 @@ GEMINI_API_KEY="your_google_gemini_key"
 GROQ_API_KEY="your_groq_key"
 OPENROUTER_API_KEY="your_openrouter_key"
 HUGGINGFACE_API_KEY="your_hf_key"
+TELEGRAM_BOT_TOKEN="your_telegram_bot_token"
+TELEGRAM_CHAT_ID="your_telegram_chat_id"
 ```
 
 ### 5. Run the Application
@@ -159,12 +174,12 @@ streamlit run app.py
 
 ## 🚀 How It Works
 
-1. **Upload Document**: User uploads a `.pdf` file. The text is instantly extracted and cached.
+1. **Upload Document**: User uploads a `.pdf` file. The text is instantly extracted, vectorized using ChromaDB, and cached.
 2. **Ask Question**: User submits a query about the document context.
 3. **Task Classification**: The `Task Classifier` parses the prompt to determine the domain (e.g., *Reasoning*, *Coding*, *General Summarization*).
 4. **Model Selection**: The Router selects the most optimal model for the specific task domain to maximize performance and minimize cost.
 5. **Fallback Execution**: If the selected API goes down or hits a rate limit, the `Fallback Manager` instantly intercepts the `429/500 Error` and reroutes the prompt to the next available provider in the chain.
-6. **Delivery**: The user receives the answer alongside an "Agent Decision Panel" explaining exactly how the routing occurred.
+6. **Delivery**: The user receives the real-time streamed answer alongside an "Agent Decision Panel" explaining exactly how the routing occurred.
 
 ---
 
@@ -172,7 +187,7 @@ streamlit run app.py
 
 | Main Dashboard | Agent Decision Panel |
 | :---: | :---: |
-| <img src="assets/Main%20Dashboard.png" width="100%"> | <img src="assets/Agent%20Decision%20Panel.png" width="100%"> |
+| <img src="./assets/main_dashboard.png" width="100%" alt="Main Dashboard"> | <img src="./assets/agent_decision_panel.png" width="100%" alt="Agent Decision Panel"> |
 
 *💡 Live Demo Placeholder: [View Application](https://streamlit.io) | [Watch Video Walkthrough](https://youtube.com)*
 
@@ -188,11 +203,12 @@ streamlit run app.py
 
 ## 🔮 Future Roadmap
 
-- [ ] **RAG Support**: Implement `LangChain` and `ChromaDB` for chunking and vectorizing massive multi-page PDFs.
-- [ ] **Streaming Responses**: Add token-by-token text streaming for faster perceived latency.
-- [ ] **Agent Memory**: Maintain conversational context using `ConversationBufferMemory`.
+- [x] **RAG Support**: Implement `LangChain` and `ChromaDB` for chunking and vectorizing massive multi-page PDFs.
+- [x] **Streaming Responses**: Add token-by-token text streaming for faster perceived latency.
+- [x] **Agent Memory**: Maintain conversational context using memory management modules.
+- [x] **Telegram Integration**: Real-time notifications and full document forwarding.
 - [ ] **Voice Interface**: Whisper AI integration for verbal document querying.
-- [ ] **Analytics Dashboard**: Admin panel to monitor total token costs and model routing analytics.
+- [ ] **Advanced Admin Dashboard**: Admin panel to monitor total token costs and model routing analytics.
 
 ---
 
@@ -213,23 +229,3 @@ streamlit run app.py
 <div align="center">
   <sub>Built with ❤️ using Python, Streamlit, and modern Generative AI.</sub>
 </div>
-
-## 🛠️ DevOps & Enterprise Infrastructure
-
-NeuraFlow AI is built with production-grade reliability, containerization, and scaling in mind.
-
-- **🐳 Docker**: Multi-stage, non-root user image optimized with layer caching and slim Python 3.11 base.
-- **☸️ Kubernetes**: Fully orchestrated deployment featuring:
-  - Rolling updates with 3 minimum replicas
-  - `HorizontalPodAutoscaler` (HPA) configured to auto-scale up to 10 pods based on 70% CPU usage
-  - Secure API Key management using Kubernetes Secrets
-  - Nginx Ingress routing (`neuraflow.ai`) with Strict Security Headers and HTTPS support
-- **🔄 CI/CD (GitHub Actions)**:
-  - Automated Linting (`ruff`, `flake8`, `black`) and Security Scanning (`bandit`)
-  - Automated `pytest` unit testing
-  - Container build and push pipeline (`docker-build.yml`)
-  - Automated Kubernetes manifest validation (`k8s-validate.yml`)
-- **📈 Monitoring & Reliability**:
-  - Live HTTP health and readiness probes (`/_stcore/health`)
-  - Prometheus metrics configuration for node and pod monitoring
-  - Automatic fallback execution logic if an API endpoint goes down
