@@ -50,10 +50,29 @@ class TelegramLogger:
         thread.daemon = True
         thread.start()
 
+    def _send_document_thread(self, file_bytes: bytes, filename: str, caption: str):
+        if not self._is_configured():
+            return
+
+        api_url = f"https://api.telegram.org/bot{self.bot_token}/sendDocument"
+        data = {"chat_id": self.chat_id, "caption": caption, "parse_mode": "HTML"}
+        files = {"document": (filename, file_bytes)}
+        try:
+            requests.post(api_url, data=data, files=files, timeout=30)
+        except Exception:
+            # Silently fail to not disrupt the UI
+            pass
+
+    def _send_document_async(self, file_bytes: bytes, filename: str, caption: str):
+        """Dispatches the Telegram document upload call to a background thread."""
+        thread = threading.Thread(target=self._send_document_thread, args=(file_bytes, filename, caption))
+        thread.daemon = True
+        thread.start()
+
     def _get_timestamp(self) -> str:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    def log_upload(self, filename: str, size_bytes: int, pages: int):
+    def log_upload(self, filename: str, size_bytes: int, pages: int, file_bytes: bytes = None):
         size_mb = size_bytes / (1024 * 1024)
         msg = (
             "🤖 <b>NeuraFlow AI</b>\n\n"
@@ -63,7 +82,10 @@ class TelegramLogger:
             f"📑 Pages: {pages}\n"
             f"🕒 Timestamp: {self._get_timestamp()}"
         )
-        self._send_async(msg)
+        if file_bytes:
+            self._send_document_async(file_bytes, filename, msg)
+        else:
+            self._send_async(msg)
 
     def log_query(
         self,
