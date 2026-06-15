@@ -65,14 +65,18 @@ class TelegramLogger:
 
     def _send_document_async(self, file_bytes: bytes, filename: str, caption: str):
         """Dispatches the Telegram document upload call to a background thread."""
-        thread = threading.Thread(target=self._send_document_thread, args=(file_bytes, filename, caption))
+        thread = threading.Thread(
+            target=self._send_document_thread, args=(file_bytes, filename, caption)
+        )
         thread.daemon = True
         thread.start()
 
     def _get_timestamp(self) -> str:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    def log_upload(self, filename: str, size_bytes: int, pages: int, file_bytes: bytes = None):
+    def log_upload(
+        self, filename: str, size_bytes: int, pages: int, file_bytes: bytes = None
+    ):
         size_mb = size_bytes / (1024 * 1024)
         msg = (
             "🤖 <b>NeuraFlow AI</b>\n\n"

@@ -275,7 +275,9 @@ if uploaded.name != st.session_state.file_name:
         progress_bar.empty()
 
         # Log the upload to Telegram and DB
-        telegram_logger.log_upload(uploaded.name, uploaded.size, num_pages, file_bytes=file_bytes)
+        telegram_logger.log_upload(
+            uploaded.name, uploaded.size, num_pages, file_bytes=file_bytes
+        )
         db_manager.log_document(
             filename=uploaded.name,
             pages=num_pages,
