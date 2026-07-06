@@ -226,6 +226,13 @@ streamlit run app.py
 
 ---
 
+## 📄 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+Copyright (c) 2024-2026 Piyush Ramteke.
+
+---
+
 <div align="center">
   <sub>Built with ❤️ using Python, Streamlit, and modern Generative AI.</sub>
 </div>
