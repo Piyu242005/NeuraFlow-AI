@@ -1,32 +1,34 @@
-![CI](https://github.com/Piyu242005/NeuraFlow-AI/actions/workflows/ci.yml/badge.svg)
 <div align="center">
 
-<img src="./assets/AI.svg" width="150" alt="NeuraFlow AI Logo">
+<img src="./assets/AI.svg" width="180" alt="NeuraFlow AI Logo">
 
-# NeuraFlow AI
+# 🌊 NeuraFlow AI
 
 **Enterprise RAG & Autonomous Multi-LLM Document Intelligence Platform**
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=20&pause=1000&color=8B5CF6&center=true&vCenter=true&width=600&lines=Analyze+PDFs+with+Generative+AI;Smart+Routing+Between+Top+LLMs;Production-Grade+AI+Architecture;Fast%2C+Accurate%2C+and+Cost-Effective)](https://git.io/typing-svg)
 
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
-[![Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
-[![Groq](https://img.shields.io/badge/Groq-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com)
-[![OpenRouter](https://img.shields.io/badge/OpenRouter-10B981?style=for-the-badge&logo=openai&logoColor=white)](https://openrouter.ai/)
-[![Hugging Face](https://img.shields.io/badge/Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/)
-<br>
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Stars](https://img.shields.io/github/stars/Piyu242005/AI-DOC-ASSISTANT?style=flat-square)](https://github.com/Piyu242005/AI-DOC-ASSISTANT/stargazers)
-[![Forks](https://img.shields.io/github/forks/Piyu242005/AI-DOC-ASSISTANT?style=flat-square)](https://github.com/Piyu242005/AI-DOC-ASSISTANT/network/members)
+<p align="center">
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://streamlit.io"><img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit"></a>
+  <a href="https://ai.google.dev/"><img src="https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini"></a>
+  <a href="https://groq.com"><img src="https://img.shields.io/badge/Groq-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq"></a>
+  <a href="https://openrouter.ai/"><img src="https://img.shields.io/badge/OpenRouter-10B981?style=for-the-badge&logo=openai&logoColor=white" alt="OpenRouter"></a>
+  <a href="https://huggingface.co/"><img src="https://img.shields.io/badge/Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="Hugging Face"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Piyu242005/NeuraFlow-AI/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/CI-Passing-brightgreen?style=flat-square&logo=github-actions" alt="CI"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT"></a>
+  <a href="https://github.com/Piyu242005/AI-DOC-ASSISTANT/stargazers"><img src="https://img.shields.io/github/stars/Piyu242005/AI-DOC-ASSISTANT?style=flat-square&color=8B5CF6" alt="Stars"></a>
+  <a href="https://github.com/Piyu242005/AI-DOC-ASSISTANT/network/members"><img src="https://img.shields.io/github/forks/Piyu242005/AI-DOC-ASSISTANT?style=flat-square&color=8B5CF6" alt="Forks"></a>
+</p>
 
 </div>
 
 <br/>
 
-## 📝 Overview
-
-**NeuraFlow AI** is a production-grade autonomous AI Agent platform. It integrates Enterprise Retrieval-Augmented Generation (RAG), ChromaDB vector search, persistent conversation memory, and real-time streaming responses into a unified ecosystem. By orchestrating multiple leading LLMs and utilizing intelligent tool calling (such as multi-provider web search via Tavily/DuckDuckGo, document retrieval, and advanced calculation), NeuraFlow AI delivers scalable, accurate, and cost-effective document intelligence and reasoning workflows.
+> **NeuraFlow AI** is a production-grade autonomous AI Agent platform. It integrates Enterprise Retrieval-Augmented Generation (RAG), ChromaDB vector search, persistent conversation memory, and real-time streaming responses into a unified ecosystem. By orchestrating multiple leading LLMs and utilizing intelligent tool calling (such as multi-provider web search via Tavily/DuckDuckGo, document retrieval, and advanced calculation), NeuraFlow AI delivers scalable, accurate, and cost-effective document intelligence and reasoning workflows.
 
 ---
 
@@ -75,67 +77,59 @@ graph TD
 ## 💻 Tech Stack
 
 <div align="center">
-
-| Layer | Technologies |
-| :--- | :--- |
-| **Frontend** | ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white) HTML5, CSS3 |
-| **Backend** | ![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=flat-square&logo=python&logoColor=white) |
-| **AI Models** | ![Gemini](https://img.shields.io/badge/Gemini_1.5_Flash-4285F4?style=flat-square&logo=google&logoColor=white) ![Groq](https://img.shields.io/badge/Groq_LLaMA_3.1-F55036?style=flat-square&logo=groq&logoColor=white) ![OpenRouter](https://img.shields.io/badge/OpenRouter-10B981?style=flat-square) ![HuggingFace](https://img.shields.io/badge/Zephyr_7B-FFD21E?style=flat-square&logo=huggingface&logoColor=black) |
-| **Tooling** | `PyPDF`, `ChromaDB`, `requests`, `pytest`, `flake8`, `black` |
-
+  <img src="https://img.shields.io/badge/Python_3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit">
+  <img src="https://img.shields.io/badge/Gemini_1.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini">
+  <img src="https://img.shields.io/badge/Groq_LLaMA_3.1-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq">
+  <img src="https://img.shields.io/badge/OpenRouter-10B981?style=for-the-badge" alt="OpenRouter">
+  <img src="https://img.shields.io/badge/Zephyr_7B-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" alt="Hugging Face">
 </div>
+
+<br/>
+
+> **Core Tooling:** `PyPDF` • `ChromaDB` • `requests` • `pytest` • `flake8` • `black`
 
 ---
 
 ## 🛠️ DevOps & Enterprise Infrastructure
 
-NeuraFlow AI is built with production-grade reliability, containerization, and scaling in mind.
+NeuraFlow AI is built with **production-grade reliability, containerization, and scaling** in mind.
 
-- **🐳 Docker**: Multi-stage, non-root user image optimized with layer caching and slim Python 3.11 base.
-- **☸️ Kubernetes**: Fully orchestrated deployment featuring:
+<details>
+<summary><b>🐳 Docker & ☸️ Kubernetes</b></summary>
+<br>
+
+- **Docker**: Multi-stage, non-root user image optimized with layer caching and slim Python 3.11 base.
+- **Kubernetes**: Fully orchestrated deployment featuring:
   - Rolling updates with 3 minimum replicas
   - `HorizontalPodAutoscaler` (HPA) configured to auto-scale up to 10 pods based on 70% CPU usage
   - Secure API Key management using Kubernetes Secrets
   - Nginx Ingress routing (`neuraflow.ai`) with Strict Security Headers and HTTPS support
-- **🔄 CI/CD (GitHub Actions)**:
+</details>
+
+<details>
+<summary><b>🔄 CI/CD & 📈 Monitoring</b></summary>
+<br>
+
+- **CI/CD (GitHub Actions)**:
   - Automated Linting (`flake8`, `black`, `isort`) and Security Scanning (`bandit`)
   - Automated `pytest` unit testing
   - Container build and push pipeline (`docker-build.yml`)
   - Automated Kubernetes manifest validation (`k8s-validate.yml`)
-- **📈 Monitoring & Reliability**:
+- **Monitoring & Reliability**:
   - Live HTTP health and readiness probes (`/_stcore/health`)
   - Prometheus metrics configuration for node and pod monitoring
   - Automatic fallback execution logic if an API endpoint goes down
+</details>
 
 ---
 
-## 📂 Project Structure
+## 🚀 Getting Started
 
-```bash
-AI-DOC-ASSISTANT/
-├── .github/workflows/   # CI/CD Pipeline (Linting, Tests, Security)
-├── assets/              # Premium SVGs, GIFs, and Logos
-├── k8s/                 # Kubernetes Manifests (Deployments, Services, HPA)
-├── monitoring/          # Prometheus & Grafana configurations
-├── providers/           # Modular LLM Provider Interfaces
-├── services/            # Core Engine & Routing Logic
-│   ├── agent_engine.py      # Orchestration
-│   ├── ai_router.py         # Factory
-│   ├── fallback_manager.py  # Chain-of-Responsibility
-│   ├── memory_manager.py    # Conversation Memory
-│   ├── rag_engine.py        # Vector Search & Retrieval
-│   ├── telegram_logger.py   # Telemetry & Monitoring
-│   └── task_classifier.py   # Intent Analysis
-├── utils/               # UI Helpers & Formatting
-├── app.py               # Main Streamlit Interface
-├── styles.py            # Global CSS / Design System
-├── requirements.txt     # Dependencies
-└── .env.example         # Environment Variable Template
-```
+<details>
+<summary><b>⚙️ Installation & Usage</b></summary>
 
----
-
-## ⚙️ Installation & Usage
+<br>
 
 ### 1. Clone the Repository
 ```bash
@@ -169,10 +163,39 @@ TELEGRAM_CHAT_ID="your_telegram_chat_id"
 ```bash
 streamlit run app.py
 ```
+</details>
+
+<details>
+<summary><b>📂 Project Structure</b></summary>
+
+<br>
+
+```bash
+AI-DOC-ASSISTANT/
+├── .github/workflows/   # CI/CD Pipeline (Linting, Tests, Security)
+├── assets/              # Premium SVGs, GIFs, and Logos
+├── k8s/                 # Kubernetes Manifests (Deployments, Services, HPA)
+├── monitoring/          # Prometheus & Grafana configurations
+├── providers/           # Modular LLM Provider Interfaces
+├── services/            # Core Engine & Routing Logic
+│   ├── agent_engine.py      # Orchestration
+│   ├── ai_router.py         # Factory
+│   ├── fallback_manager.py  # Chain-of-Responsibility
+│   ├── memory_manager.py    # Conversation Memory
+│   ├── rag_engine.py        # Vector Search & Retrieval
+│   ├── telegram_logger.py   # Telemetry & Monitoring
+│   └── task_classifier.py   # Intent Analysis
+├── utils/               # UI Helpers & Formatting
+├── app.py               # Main Streamlit Interface
+├── styles.py            # Global CSS / Design System
+├── requirements.txt     # Dependencies
+└── .env.example         # Environment Variable Template
+```
+</details>
 
 ---
 
-## 🚀 How It Works
+## 🧠 How It Works
 
 1. **Upload Document**: User uploads a `.pdf` file. The text is instantly extracted, vectorized using ChromaDB, and cached.
 2. **Ask Question**: User submits a query about the document context.
@@ -195,9 +218,9 @@ streamlit run app.py
 
 ## 📊 Performance Highlights
 
-* **Fault Tolerance:** 100% uptime guaranteed through multi-provider fallback orchestration.
-* **Intelligent Routing:** Reduces latency by up to 40% on simple queries by routing to smaller/faster models.
-* **Production Architecture:** Strongly typed OOP interfaces (`BaseProvider`), rigorous CI/CD GitHub Actions pipelines, and scalable dependency injection.
+- **Fault Tolerance:** 100% uptime guaranteed through multi-provider fallback orchestration.
+- **Intelligent Routing:** Reduces latency by up to 40% on simple queries by routing to smaller/faster models.
+- **Production Architecture:** Strongly typed OOP interfaces (`BaseProvider`), rigorous CI/CD GitHub Actions pipelines, and scalable dependency injection.
 
 ---
 
@@ -214,6 +237,8 @@ streamlit run app.py
 
 ## 👨‍💻 Author
 
+<div align="center">
+
 ### **Piyush Ramteke**
 **Data Scientist | AI Engineer | Python Developer**
 
@@ -223,6 +248,8 @@ streamlit run app.py
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/piyush-ramteke)
 [![Hugging Face](https://img.shields.io/badge/Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/Piyu242005)
 [![Portfolio](https://img.shields.io/badge/Portfolio-8B5CF6?style=for-the-badge&logo=vercel&logoColor=white)](https://piyushramteke.dev)
+
+</div>
 
 ---
 
