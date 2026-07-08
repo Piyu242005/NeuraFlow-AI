@@ -205,7 +205,7 @@ AI-DOC-ASSISTANT/
 ## 🧠 How It Works
 
 <div align="center">
-  <img src="./assets/happy-retro-robot.gif" width="120" alt="Happy Robot AI">
+  <video src="./Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" controls="controls" width="100%"></video>
 </div>
 <br/>
 
