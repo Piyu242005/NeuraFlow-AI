@@ -178,3 +178,7 @@ Much stronger for:
 For a normal portfolio website → **Not needed.**
 
 For **NeuraFlow AI** → **Worth adding**, because it demonstrates modern AI infrastructure skills and can increase the project's resume value from roughly **9/10 to 9.5–10/10**.
+
+---
+
+By contributing to or using this project, you agree to our [Terms and Conditions](https://piyu24.me/legal).

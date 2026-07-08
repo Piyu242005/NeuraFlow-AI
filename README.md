@@ -253,10 +253,12 @@ AI-DOC-ASSISTANT/
 
 ---
 
-## 📄 License
+## 📄 License & Legal
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 Copyright (c) 2024-2026 Piyush Ramteke.
+
+By using this project, you agree to our [Terms and Conditions](https://piyu24.me/legal).
 
 ---
 
