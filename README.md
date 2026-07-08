@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/AI.svg" width="180" alt="NeuraFlow AI Logo">
+![NeuraFlow AI Logo](./assets/AI.svg)
 
 # 🌊 NeuraFlow AI
 
