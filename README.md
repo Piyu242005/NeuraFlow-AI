@@ -9,7 +9,7 @@
 
 <br/>
 
-<video src="./Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" width="800" controls></video>
+<video src="https://github.com/Piyu242005/NeuraFlow-AI/raw/master/Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" width="800" controls></video>
 
 <br/>
 
@@ -205,7 +205,7 @@ AI-DOC-ASSISTANT/
 ## 🧠 How It Works
 
 <div align="center">
-  <video src="./Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" controls="controls" width="100%"></video>
+  <video src="https://github.com/Piyu242005/NeuraFlow-AI/raw/master/Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" controls="controls" width="100%"></video>
 </div>
 <br/>
 
