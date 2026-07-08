@@ -2,7 +2,7 @@ name: Cleanup Old Workflow Runs
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight UTC
+    - cron: '0 * * * *' # Runs every hour, 24/7
   workflow_dispatch: # Allows you to manually trigger it from the Actions tab
 
 jobs:
