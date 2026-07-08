@@ -3,10 +3,15 @@
 ![NeuraFlow AI Logo](./assets/AI.svg)
 
 # 🌊 NeuraFlow AI
-
-**Enterprise RAG & Autonomous Multi-LLM Document Intelligence Platform**
+### Enterprise RAG & Autonomous Multi-LLM Document Intelligence Platform
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=20&pause=1000&color=8B5CF6&center=true&vCenter=true&width=600&lines=Analyze+PDFs+with+Generative+AI;Smart+Routing+Between+Top+LLMs;Production-Grade+AI+Architecture;Fast%2C+Accurate%2C+and+Cost-Effective)](https://git.io/typing-svg)
+
+<br/>
+
+<video src="./Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" width="800" controls></video>
+
+<br/>
 
 <p align="center">
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
