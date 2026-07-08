@@ -1,6 +1,6 @@
 <div align="center">
 
-![NeuraFlow AI Logo](./assets/AI.svg)
+<img src="./assets/AI.svg" width="180" alt="NeuraFlow AI Logo" />
 
 # 🌊 NeuraFlow AI
 ### Enterprise RAG & Autonomous Multi-LLM Document Intelligence Platform
@@ -9,7 +9,7 @@
 
 <br/>
 
-<video src="./Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" width="800" controls></video>
+<video src="./Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4" width="800" controls></video>
 
 <br/>
 
@@ -33,6 +33,7 @@
 
 <br/>
 
+> [!NOTE]
 > **NeuraFlow AI** is a production-grade autonomous AI Agent platform. It integrates Enterprise Retrieval-Augmented Generation (RAG), ChromaDB vector search, persistent conversation memory, and real-time streaming responses into a unified ecosystem. By orchestrating multiple leading LLMs and utilizing intelligent tool calling (such as multi-provider web search via Tavily/DuckDuckGo, document retrieval, and advanced calculation), NeuraFlow AI delivers scalable, accurate, and cost-effective document intelligence and reasoning workflows.
 
 ---
@@ -92,6 +93,7 @@ graph TD
 
 <br/>
 
+> [!TIP]
 > **Core Tooling:** `PyPDF` • `ChromaDB` • `requests` • `pytest` • `flake8` • `black`
 
 ---
@@ -202,6 +204,11 @@ AI-DOC-ASSISTANT/
 
 ## 🧠 How It Works
 
+<div align="center">
+  <img src="./assets/happy-retro-robot.gif" width="120" alt="Happy Robot AI">
+</div>
+<br/>
+
 1. **Upload Document**: User uploads a `.pdf` file. The text is instantly extracted, vectorized using ChromaDB, and cached.
 2. **Ask Question**: User submits a query about the document context.
 3. **Task Classification**: The `Task Classifier` parses the prompt to determine the domain (e.g., *Reasoning*, *Coding*, *General Summarization*).
@@ -217,7 +224,7 @@ AI-DOC-ASSISTANT/
 | :---: | :---: |
 | <img src="./assets/main_dashboard.png" width="100%" alt="Main Dashboard"> | <img src="./assets/agent_decision_panel.png" width="100%" alt="Agent Decision Panel"> |
 
-*💡 Live Demo Placeholder: [View Application](https://streamlit.io) | [Watch Video Walkthrough](https://youtube.com)*
+*💡 Live Demo: [View Application](https://neuraflow.ai) | [Watch Video Walkthrough](./Project_Videos_and_PDFs/Anatomy_of_a_Query__Deconstructing_a_Multi-LLM_Pipeline.mp4)*
 
 ---
 
