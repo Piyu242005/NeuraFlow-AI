@@ -95,114 +95,147 @@ providers = build_providers(api_keys)
 # ║  SIDEBAR
 # ╚══════════════════════════════════════════════════════════════════════════════
 with st.sidebar:
-    # ── Branding ──────────────────────────────────────────────────────────────
+    # ══════════════════════════════════════
+    # BLOCK 1 — Brand + status
+    # ══════════════════════════════════════
     st.markdown(
         f"""
-        <div class="sb-brand">
-          <div class="sb-brand-icon">{logo_img}</div>
-          <div>
-            <div class="sb-brand-title">NeuraFlow AI</div>
-            <div class="sb-brand-sub">AI Document OS</div>
+        <div class="sb-header-block">
+          <div class="sb-logo-row">
+            <div class="sb-diamond">◈</div>
+            <div>
+              <div class="sb-brand-name">NEURAFLOW AI</div>
+              <div class="sb-brand-sub">AI Document OS</div>
+            </div>
+          </div>
+          <div class="sb-online-row">
+            <span class="sb-dot-green"></span>
+            <span class="sb-online-label">SYSTEM ONLINE</span>
           </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # ── System status ─────────────────────────────────────────────────────────
-    st.markdown(
-        '<div class="sb-status"><span class="sb-status-dot"></span>System Online</div>',
-        unsafe_allow_html=True,
-    )
-
-    st.divider()
-
-    # ── Workspace / current document ─────────────────────────────────────────
-    st.markdown('<div class="sb-section-title">Workspace</div>', unsafe_allow_html=True)
-
-    m = st.session_state.get("index_metrics")
+    # ══════════════════════════════════════
+    # BLOCK 2 — Workspace / current document
+    # ══════════════════════════════════════
+    m         = st.session_state.get("index_metrics")
     file_name = st.session_state.get("file_name", "")
 
     if file_name and m:
         pages_val   = m.get("pages", "—")
         chunks_val  = m.get("chunks", "—")
         cache_label = "Cache Hit" if m.get("cache_hit") else "Indexed"
-        cache_color = "#10B981" if m.get("cache_hit") else "#F59E0B"
-        st.markdown(
-            f"""
-            <div class="sb-doc-card">
-              <div class="sb-doc-name">📄 {html.escape(file_name)}</div>
-              <div class="sb-doc-meta">
-                {pages_val} pages · {chunks_val} chunks<br>
-                <span style="color:{cache_color};font-weight:600;">{cache_label}</span>
-              </div>
+        cache_color = "#22c55e" if m.get("cache_hit") else "#f59e0b"
+        doc_html = f"""
+        <div class="sb-doc-row">
+          <span class="sb-doc-icon">◉</span>
+          <div>
+            <div class="sb-doc-name">{html.escape(file_name)}</div>
+            <div class="sb-doc-meta">
+              {pages_val} pages · {chunks_val} chunks<br>
+              <span style="color:{cache_color};font-weight:600;">{cache_label}</span>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            '<div class="sb-doc-card"><div class="sb-doc-meta" style="color:#475569;">No document loaded — upload a PDF to begin.</div></div>',
-            unsafe_allow_html=True,
-        )
-
-    st.divider()
-
-    # ── AI Engine ─────────────────────────────────────────────────────────────
-    st.markdown('<div class="sb-section-title">AI Engine</div>', unsafe_allow_html=True)
-
-    selected = st.radio(
-        "Provider",
-        list(PROVIDERS.keys()),
-        index=list(PROVIDERS.keys()).index(st.session_state.get("selected_provider", "Auto Agent")),
-        label_visibility="collapsed",
-        key="selected_provider",
-    )
-    mode = "auto" if selected == "Auto Agent" else selected
-
-    st.divider()
-
-    # ── Provider availability ─────────────────────────────────────────────────
-    st.markdown('<div class="sb-section-title">Providers</div>', unsafe_allow_html=True)
-
-    provider_rows = []
-    for pname, pmeta in PROVIDERS.items():
-        if pname == "Auto Agent":
-            continue
-        env_key = pmeta["key_env"]
-        is_online = bool(env_key and api_keys.get(env_key, ""))
-        dot_cls = "sb-dot-online" if is_online else "sb-dot-offline"
-        label_color = "#E2E8F0" if is_online else "#475569"
-        provider_rows.append(
-            f'<div class="sb-provider-row">'
-            f'<span class="{dot_cls}"></span>'
-            f'<span style="color:{label_color};">{pmeta["icon"]} {pname}</span>'
-            f'</div>'
-        )
-    st.markdown("".join(provider_rows), unsafe_allow_html=True)
-
-    st.divider()
-
-    # ── Capabilities ─────────────────────────────────────────────────────────
-    st.markdown('<div class="sb-section-title">Capabilities</div>', unsafe_allow_html=True)
-    st.markdown(
+          </div>
+        </div>
         """
-        <div class="sb-caps">
-          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> RAG Retrieval</div>
-          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Agent Tools</div>
-          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Conversation Memory</div>
-          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Provider Fallback</div>
+    else:
+        doc_html = """
+        <div class="sb-doc-row">
+          <span class="sb-doc-icon">◉</span>
+          <div>
+            <div class="sb-doc-name" style="color:#525252;font-weight:400;">Current Document</div>
+            <div class="sb-doc-meta">No document loaded</div>
+          </div>
+        </div>
+        """
+
+    st.markdown(
+        f"""
+        <div class="sb-panel">
+          <div class="sb-section-hdr">Workspace</div>
+          {doc_html}
+          <div style="font-size:11px;color:#525252;margin-top:2px;">+ Upload document below</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # ── Footer card ───────────────────────────────────────────────────────────
+    # ══════════════════════════════════════
+    # BLOCK 3 — AI Engine: auto-router row + provider selector + provider list
+    # ══════════════════════════════════════
+
+    # Build provider availability rows
+    prov_rows_html = ""
+    for pname, pmeta in PROVIDERS.items():
+        if pname == "Auto Agent":
+            continue
+        env_key   = pmeta["key_env"]
+        is_online = bool(env_key and api_keys.get(env_key, ""))
+        dot_cls   = "sb-dot-on" if is_online else "sb-dot-off"
+        txt_color = "#f5f5f5" if is_online else "#525252"
+        prov_rows_html += (
+            f'<div class="sb-prov-row">'
+            f'<span class="{dot_cls}"></span>'
+            f'<span style="color:{txt_color};">{pname}</span>'
+            f'</div>'
+        )
+
+    st.markdown(
+        f"""
+        <div class="sb-panel">
+          <div class="sb-section-hdr">AI Engine</div>
+          <div class="sb-router-row">
+            <span class="sb-router-icon">⚡</span>
+            <div>
+              <div class="sb-router-name">AUTO ROUTER</div>
+              <div class="sb-router-sub">Intelligent Routing</div>
+            </div>
+          </div>
+          <div class="sb-prov-label">Providers</div>
+          {prov_rows_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Hidden provider radio — drives mode selection, kept functional
+    selected = st.radio(
+        "Select provider",
+        list(PROVIDERS.keys()),
+        index=list(PROVIDERS.keys()).index(
+            st.session_state.get("selected_provider", "Auto Agent")
+        ),
+        label_visibility="collapsed",
+        key="selected_provider",
+    )
+    mode = "auto" if selected == "Auto Agent" else selected
+
+    # ══════════════════════════════════════
+    # BLOCK 4 — Capabilities
+    # ══════════════════════════════════════
     st.markdown(
         """
-        <div class="sb-footer-card">
-          <div class="sb-footer-title">NeuraFlow AI</div>
-          <div class="sb-footer-meta">v2.0 · Built by Piyush</div>
+        <div class="sb-panel">
+          <div class="sb-section-hdr">Capabilities</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> RAG</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Agent Tools</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Memory</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Fallback</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ══════════════════════════════════════
+    # BLOCK 5 — Footer
+    # ══════════════════════════════════════
+    st.markdown(
+        """
+        <div class="sb-footer">
+          <div class="sb-footer-title">NeuraFlow AI v2.0</div>
+          <div class="sb-footer-meta">Built by Piyush</div>
         </div>
         """,
         unsafe_allow_html=True,
