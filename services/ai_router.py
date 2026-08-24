@@ -1,4 +1,4 @@
-"""Provider construction and routing metadata."""
+"""Provider construction and policy-aware agent factory."""
 
 from typing import Dict
 
@@ -7,7 +7,7 @@ from providers.gemini_provider import GeminiProvider
 from providers.groq_provider import GroqProvider
 from providers.huggingface_provider import HuggingFaceProvider
 from providers.openrouter_provider import OpenRouterProvider
-from services.agent_engine import AgentEngine
+from services.policy_agent_engine import PolicyAgentEngine
 
 
 def build_providers(env: Dict[str, str]) -> Dict[str, BaseProvider]:
@@ -23,8 +23,8 @@ def build_providers(env: Dict[str, str]) -> Dict[str, BaseProvider]:
     return providers
 
 
-def get_agent(providers: Dict[str, BaseProvider], mode: str = "auto") -> AgentEngine:
-    return AgentEngine(providers=providers, mode=mode)
+def get_agent(providers: Dict[str, BaseProvider], mode: str = "auto") -> PolicyAgentEngine:
+    return PolicyAgentEngine(providers=providers, mode=mode)
 
 
 def get_all_provider_meta() -> list:
