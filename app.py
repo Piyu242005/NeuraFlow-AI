@@ -91,6 +91,12 @@ for meta in PROVIDERS.values():
 
 providers = build_providers(api_keys)
 
+# ── Provider selection lives in the main area (drives mode) ──────────────────
+# We read it from session_state here so sidebar can reflect the current choice.
+_selected_idx = list(PROVIDERS.keys()).index(
+    st.session_state.get("selected_provider", "Auto Agent")
+)
+
 # ╔══════════════════════════════════════════════════════════════════════════════
 # ║  SIDEBAR
 # ╚══════════════════════════════════════════════════════════════════════════════
@@ -99,7 +105,7 @@ with st.sidebar:
     # BLOCK 1 — Brand + status
     # ══════════════════════════════════════
     st.markdown(
-        f"""
+        """
         <div class="sb-header-block">
           <div class="sb-logo-row">
             <div class="sb-diamond">◈</div>
@@ -120,65 +126,66 @@ with st.sidebar:
     # ══════════════════════════════════════
     # BLOCK 2 — Workspace / current document
     # ══════════════════════════════════════
-    m         = st.session_state.get("index_metrics")
-    file_name = st.session_state.get("file_name", "")
+    _m         = st.session_state.get("index_metrics")
+    _file_name = st.session_state.get("file_name", "")
 
-    if file_name and m:
-        pages_val   = m.get("pages", "—")
-        chunks_val  = m.get("chunks", "—")
-        cache_label = "Cache Hit" if m.get("cache_hit") else "Indexed"
-        cache_color = "#22c55e" if m.get("cache_hit") else "#f59e0b"
-        doc_html = f"""
+    if _file_name and _m:
+        _pages   = _m.get("pages", "—")
+        _chunks  = _m.get("chunks", "—")
+        _clabel  = "Cache Hit" if _m.get("cache_hit") else "Indexed"
+        _ccolor  = "#22c55e" if _m.get("cache_hit") else "#f59e0b"
+        _doc_html = f"""
         <div class="sb-doc-row">
           <span class="sb-doc-icon">◉</span>
           <div>
-            <div class="sb-doc-name">{html.escape(file_name)}</div>
+            <div class="sb-doc-name">{html.escape(_file_name)}</div>
             <div class="sb-doc-meta">
-              {pages_val} pages · {chunks_val} chunks<br>
-              <span style="color:{cache_color};font-weight:600;">{cache_label}</span>
+              {_pages} pages · {_chunks} chunks<br>
+              <span style="color:{_ccolor};font-weight:600;">{_clabel}</span>
             </div>
           </div>
-        </div>
-        """
+        </div>"""
     else:
-        doc_html = """
+        _doc_html = """
         <div class="sb-doc-row">
           <span class="sb-doc-icon">◉</span>
           <div>
             <div class="sb-doc-name" style="color:#525252;font-weight:400;">Current Document</div>
             <div class="sb-doc-meta">No document loaded</div>
           </div>
-        </div>
-        """
+        </div>"""
 
     st.markdown(
         f"""
         <div class="sb-panel">
           <div class="sb-section-hdr">Workspace</div>
-          {doc_html}
-          <div style="font-size:11px;color:#525252;margin-top:2px;">+ Upload document below</div>
+          {_doc_html}
+          <div class="sb-upload-hint">+ Upload document below</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
     # ══════════════════════════════════════
-    # BLOCK 3 — AI Engine: auto-router row + provider selector + provider list
+    # BLOCK 3 — AI Engine + provider availability
     # ══════════════════════════════════════
+    _cur = st.session_state.get("selected_provider", "Auto Agent")
+    _is_auto = _cur == "Auto Agent"
+    _router_name = "AUTO ROUTER" if _is_auto else _cur.upper()
+    _router_sub  = "Intelligent Routing" if _is_auto else PROVIDERS[_cur]["model"]
 
-    # Build provider availability rows
-    prov_rows_html = ""
-    for pname, pmeta in PROVIDERS.items():
-        if pname == "Auto Agent":
+    _prov_rows = ""
+    for _pname, _pmeta in PROVIDERS.items():
+        if _pname == "Auto Agent":
             continue
-        env_key   = pmeta["key_env"]
-        is_online = bool(env_key and api_keys.get(env_key, ""))
-        dot_cls   = "sb-dot-on" if is_online else "sb-dot-off"
-        txt_color = "#f5f5f5" if is_online else "#525252"
-        prov_rows_html += (
+        _env   = _pmeta["key_env"]
+        _on    = bool(_env and api_keys.get(_env, ""))
+        _dot   = "sb-dot-on" if _on else "sb-dot-off"
+        _tclr  = "#f5f5f5" if _on else "#525252"
+        _prov_rows += (
             f'<div class="sb-prov-row">'
-            f'<span class="{dot_cls}"></span>'
-            f'<span style="color:{txt_color};">{pname}</span>'
+            f'<span class="{_dot}"></span>'
+            f'<span style="color:{_tclr};">{_pname}</span>'
             f'</div>'
         )
 
@@ -189,28 +196,16 @@ with st.sidebar:
           <div class="sb-router-row">
             <span class="sb-router-icon">⚡</span>
             <div>
-              <div class="sb-router-name">AUTO ROUTER</div>
-              <div class="sb-router-sub">Intelligent Routing</div>
+              <div class="sb-router-name">{_router_name}</div>
+              <div class="sb-router-sub">{_router_sub}</div>
             </div>
           </div>
           <div class="sb-prov-label">Providers</div>
-          {prov_rows_html}
+          {_prov_rows}
         </div>
         """,
         unsafe_allow_html=True,
     )
-
-    # Hidden provider radio — drives mode selection, kept functional
-    selected = st.radio(
-        "Select provider",
-        list(PROVIDERS.keys()),
-        index=list(PROVIDERS.keys()).index(
-            st.session_state.get("selected_provider", "Auto Agent")
-        ),
-        label_visibility="collapsed",
-        key="selected_provider",
-    )
-    mode = "auto" if selected == "Auto Agent" else selected
 
     # ══════════════════════════════════════
     # BLOCK 4 — Capabilities
@@ -269,17 +264,27 @@ st.markdown(
 # ── Section 2: AI Engine controls ─────────────────────────────────────────────
 st.markdown('<div class="section-label">AI Engine</div>', unsafe_allow_html=True)
 
+# Provider picker — in the MAIN area only (sidebar hides its .stRadio)
+selected = st.radio(
+    "Provider",
+    list(PROVIDERS.keys()),
+    index=_selected_idx,
+    horizontal=True,
+    label_visibility="collapsed",
+    key="selected_provider",
+)
+mode = "auto" if selected == "Auto Agent" else selected
 meta = PROVIDERS[selected]
-is_auto = selected == "Auto Agent"
 
-engine_icon  = meta["icon"]
+# Engine info card — compact, no oversized emoji
 engine_name  = selected
 engine_model = meta["model"]
+engine_icon  = meta["icon"]
 
 st.markdown(
     f"""
     <div class="engine-provider-info">
-      <span style="font-size:20px;">{engine_icon}</span>
+      <span style="font-size:15px;line-height:1;">{engine_icon}</span>
       <div>
         <div class="engine-provider-name">{engine_name}</div>
         <div class="engine-provider-model">{engine_model}</div>
@@ -306,18 +311,21 @@ with col_b:
         key="show_reasoning",
     )
 
+# Search provider — label hidden, replaced with our styled section label
+st.markdown('<div class="section-label">Search Provider</div>', unsafe_allow_html=True)
 search_provider = st.radio(
     "Search Provider",
     ["Auto", "Tavily", "DuckDuckGo"],
     index=["Auto", "Tavily", "DuckDuckGo"].index(st.session_state.get("search_provider", "Auto")),
     horizontal=True,
+    label_visibility="collapsed",
     key="search_provider",
 )
 
 # ── Section 3: Document Workspace ─────────────────────────────────────────────
 st.markdown('<div class="section-label">Document Workspace</div>', unsafe_allow_html=True)
 st.markdown(
-    '<p style="font-size:13px;color:#64748B;margin-bottom:10px;">Upload a PDF to start asking questions.</p>',
+    '<p style="font-size:13px;color:#525252;margin:0 0 10px;">Upload a PDF to start asking questions.</p>',
     unsafe_allow_html=True,
 )
 

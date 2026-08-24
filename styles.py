@@ -6,27 +6,23 @@ def get_css() -> str:
     return """
 <style>
 /* ============================================================
-   DESIGN TOKENS  ·  black-red theme
+   DESIGN TOKENS  ·  black / red
    ============================================================ */
 :root {
-  --bg:         #0a0a0a;
-  --surface:    #111111;
-  --surface2:   #1a1a1a;
-  --border:     rgba(255,255,255,0.07);
-  --border-hi:  rgba(220,38,38,0.40);
-  --primary:    #dc2626;
-  --primary-lt: #ef4444;
-  --primary-dim: rgba(220,38,38,0.15);
-  --accent:     #b91c1c;
-  --text:       #f5f5f5;
-  --text-muted: #a3a3a3;
-  --text-dim:   #525252;
-  --success:    #22c55e;
-  --warning:    #f59e0b;
-  --error:      #ef4444;
-  --radius-sm:  6px;
-  --radius:     10px;
-  --radius-lg:  14px;
+  --bg:          #0a0a0a;
+  --surface:     #111111;
+  --surface2:    #1a1a1a;
+  --border:      rgba(255,255,255,0.07);
+  --primary:     #dc2626;
+  --accent:      #b91c1c;
+  --text:        #f5f5f5;
+  --text-muted:  #a3a3a3;
+  --text-dim:    #525252;
+  --success:     #22c55e;
+  --warning:     #f59e0b;
+  --radius-sm:   6px;
+  --radius:      10px;
+  --radius-lg:   14px;
 }
 
 /* ============================================================
@@ -51,13 +47,23 @@ def get_css() -> str:
 header     { visibility: visible !important; display: block !important; background: transparent !important; }
 footer     { visibility: hidden !important; }
 
+/* Remove ALL top padding from main block so header sits flush */
 .block-container {
-  padding: 0 2rem 4rem !important;
+  padding-top: 0 !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  padding-bottom: 4rem !important;
   max-width: 1400px !important;
 }
 
+/* Also kill the default Streamlit inner-block top margin */
+.block-container > div:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 /* ============================================================
-   INTERACTION SAFETY
+   INTERACTION SAFETY  —  never block inputs
    ============================================================ */
 .stTextInput,
 .stTextInput > div,
@@ -83,30 +89,46 @@ button, input, textarea, select {
 }
 
 /* ============================================================
-   SIDEBAR  —  solid black, red accents
+   SIDEBAR  —  solid black shell
    ============================================================ */
 section[data-testid="stSidebar"] {
   background: #0a0a0a !important;
-  border-right: 1px solid rgba(220,38,38,0.25) !important;
-  width: 280px !important;
+  border-right: 1px solid rgba(220,38,38,0.22) !important;
+  width: 272px !important;
   box-shadow: none !important;
 }
 
+/* Zero out ALL default Streamlit padding inside sidebar */
 section[data-testid="stSidebar"] > div {
   padding: 0 !important;
 }
 
-section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+section[data-testid="stSidebar"] > div > div {
+  padding: 0 !important;
   gap: 0 !important;
 }
 
-/* kill default streamlit paragraph / caption colour inside sidebar */
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+  gap: 0 !important;
+  padding: 0 !important;
+}
+
+/* Kill the default margin on every stMarkdownContainer inside sidebar */
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+section[data-testid="stSidebar"] .stMarkdown,
+section[data-testid="stSidebar"] .element-container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Kill default paragraph margins inside sidebar */
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] .stCaption,
 section[data-testid="stSidebar"] .stMarkdown p {
   color: var(--text-muted) !important;
   font-size: 12px !important;
   line-height: 1.5 !important;
+  margin: 0 !important;
 }
 
 section[data-testid="stSidebar"] label {
@@ -117,34 +139,14 @@ section[data-testid="stSidebar"] label {
   text-transform: uppercase !important;
 }
 
-/* radio group inside sidebar */
-section[data-testid="stSidebar"] .stRadio > div[role="radiogroup"] {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 2px !important;
-}
-
-section[data-testid="stSidebar"] .stRadio > div[role="radiogroup"] > label {
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  padding: 7px 20px !important;
+/* ── HIDE the provider radio widget visually (kept for state) ── */
+section[data-testid="stSidebar"] .stRadio {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
   margin: 0 !important;
-  color: var(--text-muted) !important;
-  font-size: 12px !important;
-  transition: background 0.12s, color 0.12s;
-}
-
-section[data-testid="stSidebar"] .stRadio > div[role="radiogroup"] > label:hover {
-  background: rgba(220,38,38,0.08) !important;
-  color: var(--text) !important;
-}
-
-section[data-testid="stSidebar"] .stRadio > div[role="radiogroup"] > label:has(input:checked) {
-  background: rgba(220,38,38,0.12) !important;
-  color: #f87171 !important;
-  border-left: 2px solid #dc2626 !important;
-  padding-left: 18px !important;
+  padding: 0 !important;
 }
 
 section[data-testid="stSidebar"] .stCheckbox label {
@@ -153,16 +155,16 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
-   SIDEBAR  —  panel sections (the wireframe boxes)
+   SIDEBAR  —  panel blocks
    ============================================================ */
 
-/* every st.markdown block inside sidebar gets a clean wrapper */
+/* shared panel style: thin bottom border, consistent padding */
 .sb-panel {
   border-bottom: 1px solid rgba(255,255,255,0.07);
   padding: 14px 16px;
 }
 
-/* top brand block */
+/* ── Header block ── */
 .sb-header-block {
   padding: 16px 16px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -172,7 +174,7 @@ section[data-testid="stSidebar"] .stCheckbox label {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .sb-diamond {
@@ -195,6 +197,7 @@ section[data-testid="stSidebar"] .stCheckbox label {
   color: #ffffff !important;
   letter-spacing: 0.2px;
   line-height: 1.15 !important;
+  margin: 0 !important;
 }
 
 .sb-brand-sub {
@@ -202,13 +205,13 @@ section[data-testid="stSidebar"] .stCheckbox label {
   color: var(--text-dim) !important;
   letter-spacing: 1.8px !important;
   text-transform: uppercase !important;
+  margin: 0 !important;
 }
 
 .sb-online-row {
   display: flex;
   align-items: center;
   gap: 7px;
-  margin-top: 10px;
 }
 
 .sb-dot-green {
@@ -225,24 +228,25 @@ section[data-testid="stSidebar"] .stCheckbox label {
   font-weight: 600;
   color: #86efac !important;
   letter-spacing: 0.4px;
+  margin: 0 !important;
 }
 
-/* section titles */
+/* ── Section headers inside panels ── */
 .sb-section-hdr {
   font-size: 9px !important;
   font-weight: 800 !important;
   letter-spacing: 2px !important;
   text-transform: uppercase !important;
   color: var(--text-dim) !important;
-  margin: 0 0 8px 0 !important;
+  margin: 0 0 10px 0 !important;
 }
 
-/* doc row */
+/* ── Document row ── */
 .sb-doc-row {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .sb-doc-icon {
@@ -258,21 +262,28 @@ section[data-testid="stSidebar"] .stCheckbox label {
   color: var(--text) !important;
   overflow-wrap: anywhere;
   line-height: 1.35;
+  margin: 0 !important;
 }
 
 .sb-doc-meta {
   font-size: 10px !important;
   color: var(--text-dim) !important;
-  margin-top: 2px;
+  margin-top: 2px !important;
   line-height: 1.5;
 }
 
-/* auto-router row */
+.sb-upload-hint {
+  font-size: 10px !important;
+  color: var(--text-dim) !important;
+  margin: 0 !important;
+}
+
+/* ── Router row ── */
 .sb-router-row {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .sb-router-icon {
@@ -286,43 +297,45 @@ section[data-testid="stSidebar"] .stCheckbox label {
   font-weight: 700;
   color: #ffffff !important;
   letter-spacing: 0.3px;
+  margin: 0 !important;
 }
 
 .sb-router-sub {
   font-size: 10px !important;
   color: var(--text-dim) !important;
-  margin-top: 2px;
+  margin: 2px 0 0 0 !important;
 }
 
-/* provider list */
+/* ── Provider list ── */
 .sb-prov-label {
   font-size: 9px !important;
   font-weight: 700 !important;
-  letter-spacing: 1.2px !important;
+  letter-spacing: 1.4px !important;
   text-transform: uppercase !important;
   color: var(--text-dim) !important;
-  margin-bottom: 6px !important;
+  margin: 10px 0 6px 0 !important;
 }
 
 .sb-prov-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 0;
+  padding: 3px 0;
   font-size: 12px !important;
 }
 
-.sb-dot-on  { width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 5px rgba(34,197,94,0.6);flex-shrink:0; }
-.sb-dot-off { width:7px;height:7px;border-radius:50%;background:#3f3f3f;flex-shrink:0; }
+.sb-dot-on  { width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 4px rgba(34,197,94,0.6);flex-shrink:0; }
+.sb-dot-off { width:6px;height:6px;border-radius:50%;background:#333333;flex-shrink:0; }
 
-/* capabilities */
+/* ── Capabilities ── */
 .sb-cap-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 0;
+  padding: 3px 0;
   font-size: 12px !important;
   color: var(--text-muted) !important;
+  margin: 0 !important;
 }
 
 .sb-cap-check {
@@ -331,7 +344,7 @@ section[data-testid="stSidebar"] .stCheckbox label {
   color: var(--success);
 }
 
-/* footer */
+/* ── Footer ── */
 .sb-footer {
   padding: 14px 16px;
 }
@@ -340,40 +353,41 @@ section[data-testid="stSidebar"] .stCheckbox label {
   font-size: 12px !important;
   font-weight: 700;
   color: var(--text) !important;
+  margin: 0 !important;
 }
 
 .sb-footer-meta {
   font-size: 10px !important;
   color: var(--text-dim) !important;
-  margin-top: 2px;
+  margin: 2px 0 0 0 !important;
 }
 
 /* ============================================================
-   MAIN  —  header  (large centered icon + bold white title, pic-1 style)
+   MAIN  —  header block
+   Sits flush at the top; SVG icon is 72px centered above title.
    ============================================================ */
 .nf-header {
-  padding: 44px 40px 36px;
-  margin: 0 -2rem 28px;
+  padding: 36px 40px 30px;
+  /* negative margins cancel block-container side padding so header is full-width */
+  margin: 0 -2rem 24px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
   background: #0d0d0d;
   text-align: center;
 }
-
-/* the 72px SVG img is already block + centred via inline style */
 
 .nf-header h1 {
   font-size: 40px !important;
   font-weight: 800 !important;
   letter-spacing: -1.2px !important;
   color: #ffffff !important;
-  margin: 0 0 10px !important;
+  margin: 0 0 8px 0 !important;
   line-height: 1.15 !important;
 }
 
 .nf-header p {
-  font-size: 15px !important;
+  font-size: 14px !important;
   color: var(--text-muted) !important;
-  margin: 0 0 24px !important;
+  margin: 0 0 22px 0 !important;
   line-height: 1.6 !important;
 }
 
@@ -396,7 +410,7 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
-   SECTION LABELS
+   SECTION LABELS  (main area)
    ============================================================ */
 .section-label {
   font-size: 9px;
@@ -404,7 +418,7 @@ section[data-testid="stSidebar"] .stCheckbox label {
   color: var(--text-dim);
   letter-spacing: 1.8px;
   text-transform: uppercase;
-  margin: 20px 0 9px;
+  margin: 20px 0 8px;
   padding-left: 2px;
 }
 
@@ -415,11 +429,11 @@ section[data-testid="stSidebar"] .stCheckbox label {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  background: rgba(220,38,38,0.06);
-  border: 1px solid rgba(220,38,38,0.18);
+  padding: 10px 14px;
+  background: rgba(220,38,38,0.05);
+  border: 1px solid rgba(220,38,38,0.16);
   border-radius: var(--radius-sm);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .engine-provider-name {
@@ -445,19 +459,24 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
-   FILE UPLOADER
+   FILE UPLOADER  —  hide duplicate "Browse files" text label
    ============================================================ */
 [data-testid="stFileUploadDropzone"] {
   background: rgba(220,38,38,0.03) !important;
-  border: 2px dashed rgba(220,38,38,0.30) !important;
+  border: 2px dashed rgba(220,38,38,0.28) !important;
   border-radius: var(--radius) !important;
-  min-height: 100px !important;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.18s, background 0.18s;
 }
 
 [data-testid="stFileUploadDropzone"]:hover {
   border-color: rgba(220,38,38,0.55) !important;
   background: rgba(220,38,38,0.06) !important;
+}
+
+/* The inner upload button — suppress the plain-text label that doubles */
+[data-testid="stFileUploadDropzone"] small {
+  color: var(--text-dim) !important;
+  font-size: 11px !important;
 }
 
 /* ============================================================
@@ -525,7 +544,7 @@ section[data-testid="stSidebar"] .stCheckbox label {
    ============================================================ */
 div[data-testid="stForm"] {
   background: var(--surface) !important;
-  border: 1px solid rgba(220,38,38,0.18) !important;
+  border: 1px solid rgba(220,38,38,0.16) !important;
   border-radius: var(--radius-lg) !important;
   padding: 14px !important;
 }
@@ -542,7 +561,7 @@ div[data-testid="stForm"] {
 .stTextInput input:focus,
 .stTextArea textarea:focus {
   border-color: var(--primary) !important;
-  box-shadow: 0 0 0 2px rgba(220,38,38,0.14) !important;
+  box-shadow: 0 0 0 2px rgba(220,38,38,0.12) !important;
   outline: none !important;
 }
 
@@ -572,7 +591,6 @@ div[data-testid="stForm"] .stTextInput input {
 .stButton > button[kind="primary"]:hover,
 [data-testid="stFormSubmitButton"] button[kind="primary"]:hover {
   background: var(--accent) !important;
-  opacity: 1;
 }
 
 .stButton > button[kind="secondary"],
@@ -586,7 +604,7 @@ div[data-testid="stForm"] .stTextInput input {
    RADIO + CHECKBOXES  (main area)
    ============================================================ */
 .stRadio > div[role="radiogroup"] {
-  gap: 5px !important;
+  gap: 6px !important;
   flex-wrap: wrap !important;
 }
 
@@ -603,6 +621,15 @@ div[data-testid="stForm"] .stTextInput input {
   background: rgba(220,38,38,0.10) !important;
   border-color: rgba(220,38,38,0.35) !important;
   color: #fca5a5 !important;
+}
+
+/* radio label text (the "Search Provider" heading Streamlit auto-renders) */
+.stRadio > label {
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  color: var(--text-dim) !important;
+  letter-spacing: 1.6px !important;
+  text-transform: uppercase !important;
 }
 
 .stCheckbox label { color: var(--text-muted) !important; }
@@ -643,18 +670,9 @@ div[data-testid="stForm"] .stTextInput input {
 /* ============================================================
    MISC
    ============================================================ */
-.section-label {
-  font-size: 9px;
-  font-weight: 800;
-  color: var(--text-dim);
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  margin: 20px 0 9px;
-}
-
 .empty-state {
   text-align: center;
-  padding: 52px 24px;
+  padding: 48px 24px;
 }
 
 .empty-state .icon { font-size: 44px; }
@@ -689,20 +707,20 @@ hr { border-color: rgba(255,255,255,0.06) !important; }
    SCROLLBAR
    ============================================================ */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: rgba(220,38,38,0.30); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(220,38,38,0.28); border-radius: 2px; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
-  .block-container { padding: 0 1.25rem 3rem !important; }
-  .nf-header { padding: 22px 20px 18px; }
+  .block-container { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  .nf-header { padding: 28px 24px 22px; }
 }
 
 @media (max-width: 768px) {
-  .block-container { padding: 0 0.75rem 2rem !important; }
-  .nf-header { margin: 0 -0.75rem 18px; padding: 20px 14px 18px; }
-  .nf-header h1 { font-size: 26px !important; }
+  .block-container { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .nf-header { margin: 0 -0.75rem 18px; padding: 24px 16px 20px; }
+  .nf-header h1 { font-size: 28px !important; }
   section[data-testid="stSidebar"] { width: 100% !important; }
   .stChatMessage[data-testid="stChatMessageUser"] > div,
   .stChatMessage[data-testid="stChatMessageAssistant"] > div { max-width: 92% !important; }
