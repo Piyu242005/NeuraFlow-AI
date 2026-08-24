@@ -1,0 +1,10 @@
+[
+  {
+    "question": "What is the main purpose of this document?",
+    "expected_terms": ["purpose", "document"]
+  },
+  {
+    "question": "Which metrics or recommendations are important?",
+    "expected_terms": ["metrics", "recommendations"]
+  }
+]
