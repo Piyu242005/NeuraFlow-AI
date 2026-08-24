@@ -11,7 +11,21 @@ def get_css() -> str:
 
 *, *::before, *::after { font-family: 'Inter', sans-serif !important; box-sizing: border-box; }
 .stApp { background: #080D1A !important; color: #E2E8F0 !important; }
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu {
+    visibility: visible !important;
+    display: block !important;
+}
+
+header {
+    visibility: visible !important;
+    display: block !important;
+    background: transparent !important;
+}
+
+footer {
+    visibility: hidden !important;
+}
+
 .block-container { padding: 0 2rem 4rem !important; max-width: 1400px !important; }
 
 /* Interaction safety */
