@@ -1,8 +1,4 @@
-"""Policy-aware AgentEngine wrapper.
-
-Keeps the existing AgentEngine API intact while upgrading auto mode with
-cost/quality/speed/reliability scoring.
-"""
+"""Policy-aware AgentEngine wrapper."""
 
 from services.agent_engine import AgentEngine
 from services.router_policy import select_provider
@@ -10,7 +6,7 @@ from services.task_classifier import classify_task
 
 
 class PolicyAgentEngine(AgentEngine):
-    """AgentEngine with deterministic policy-based auto routing."""
+    """AgentEngine with deterministic cost/quality/speed/reliability routing."""
 
     def _decision_target(self, prompt: str):
         if self.mode != "auto":
@@ -26,7 +22,6 @@ class PolicyAgentEngine(AgentEngine):
         response, fallback_log = self._fallback_manager.execute_with_fallback(
             prompt=prompt, preferred_provider=preferred
         )
-        decision = super().run(prompt) if False else None
         from services.agent_engine import AgentDecision
         return AgentDecision(
             task_type=task_type,
@@ -47,6 +42,8 @@ class PolicyAgentEngine(AgentEngine):
             status_callback=status_callback,
         )
         from services.agent_engine import StreamWrapper
-        return StreamWrapper(
-            generator, task_type, preferred, reason, fallback_log, score
+        wrapper = StreamWrapper(
+            generator, task_type, preferred, reason, fallback_log
         )
+        wrapper.routing_score = score
+        return wrapper
