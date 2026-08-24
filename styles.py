@@ -410,6 +410,43 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
+   PROFILE CARD
+   ============================================================ */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 22px;
+  margin: 0 0 4px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius);
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+
+.profile-name {
+  font-size: 20px !important;
+  font-weight: 700;
+  color: #f8fafc !important;
+  letter-spacing: -0.3px;
+  margin-bottom: 5px;
+}
+
+.profile-bio {
+  font-size: 13px !important;
+  color: var(--text-muted) !important;
+  line-height: 1.5;
+}
+
+/* ============================================================
    SECTION LABELS  (main area)
    ============================================================ */
 .section-label {

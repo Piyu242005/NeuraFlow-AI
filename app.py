@@ -47,8 +47,9 @@ def _b64(path: str) -> str:
         return base64.b64encode(f.read()).decode()
 
 
-logo_b64 = _b64("assets/AI.svg")
-logo_img  = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="36" style="vertical-align:middle;" />'
+logo_b64    = _b64("assets/AI.svg")
+logo_img    = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="36" style="vertical-align:middle;" />'
+robot_b64   = _b64("assets/happy-retro-robot.gif")
 
 # ── Provider registry ─────────────────────────────────────────────────────────
 PROVIDERS = {
@@ -255,6 +256,20 @@ st.markdown(
         <span class="nf-badge">Memory</span>
         <span class="nf-badge">Fallback</span>
         <span class="nf-badge">4+ Providers</span>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ── Profile card ──────────────────────────────────────────────────────────────
+st.markdown(
+    f"""
+    <div class="profile-card">
+      <img src="data:image/gif;base64,{robot_b64}" class="profile-avatar" />
+      <div>
+        <div class="profile-name">Piyush Ramteke</div>
+        <div class="profile-bio">Data Scientist &amp; AI Engineer | Building intelligent multi-LLM solutions</div>
       </div>
     </div>
     """,
