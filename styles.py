@@ -149,6 +149,85 @@ section[data-testid="stSidebar"] .stRadio {
   padding: 0 !important;
 }
 
+/* ============================================================
+   SIDEBAR NAV  —  multipage navigation (top of sidebar)
+   ============================================================ */
+
+/* Wrapper that holds the page nav */
+[data-testid="stSidebarNav"] {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+/* Each nav item li */
+[data-testid="stSidebarNav"] ul {
+  list-style: none !important;
+  padding: 6px 0 !important;
+  margin: 0 !important;
+}
+
+[data-testid="stSidebarNav"] li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* The anchor link for each page */
+[data-testid="stSidebarNav"] a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 16px !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  text-decoration: none !important;
+  color: var(--text-dim) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.2px !important;
+  transition: background 0.12s, color 0.12s !important;
+  background: transparent !important;
+}
+
+[data-testid="stSidebarNav"] a:hover {
+  background: rgba(220,38,38,0.07) !important;
+  color: var(--text-muted) !important;
+}
+
+/* Active / current page */
+[data-testid="stSidebarNav"] a[aria-current="page"] {
+  background: rgba(220,38,38,0.10) !important;
+  color: #fca5a5 !important;
+  border-left: 2px solid var(--primary) !important;
+  padding-left: 14px !important;
+}
+
+/* Page icon (emoji or svg beside the name) */
+[data-testid="stSidebarNav"] a span:first-child,
+[data-testid="stSidebarNav"] a img {
+  font-size: 14px !important;
+  width: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+/* The grey "app" label pill that Streamlit renders above the nav */
+[data-testid="stSidebarNav"]::before,
+[data-testid="stSidebarNavSeparator"] {
+  display: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Kill the grey rounded pill / header entirely */
+section[data-testid="stSidebar"] > div [data-testid="stSidebarNav"] > div:first-child,
+section[data-testid="stSidebar"] [class*="sidebarNavHeader"],
+section[data-testid="stSidebar"] [class*="NavHeader"] {
+  display: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
 section[data-testid="stSidebar"] .stCheckbox label {
   color: var(--text-muted) !important;
   font-size: 12px !important;
@@ -496,24 +575,58 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
-   FILE UPLOADER  —  hide duplicate "Browse files" text label
+   FILE UPLOADER  —  premium drag-drop zone, no duplicate text
    ============================================================ */
+
+/* Outer dropzone wrapper */
 [data-testid="stFileUploadDropzone"] {
-  background: rgba(220,38,38,0.03) !important;
-  border: 2px dashed rgba(220,38,38,0.28) !important;
+  background: rgba(220,38,38,0.04) !important;
+  border: 2px dashed rgba(220,38,38,0.30) !important;
   border-radius: var(--radius) !important;
+  padding: 28px 20px !important;
+  text-align: center !important;
   transition: border-color 0.18s, background 0.18s;
+  cursor: pointer !important;
 }
 
 [data-testid="stFileUploadDropzone"]:hover {
-  border-color: rgba(220,38,38,0.55) !important;
-  background: rgba(220,38,38,0.06) !important;
+  border-color: rgba(220,38,38,0.65) !important;
+  background: rgba(220,38,38,0.07) !important;
 }
 
-/* The inner upload button — suppress the plain-text label that doubles */
-[data-testid="stFileUploadDropzone"] small {
+/* Hide the default Streamlit "Browse files" / "Upload" button entirely —
+   it renders as a styled button that duplicates the label text */
+[data-testid="stFileUploadDropzone"] button {
+  /* Replace with a clean upload CTA */
+  background: rgba(220,38,38,0.12) !important;
+  border: 1px solid rgba(220,38,38,0.35) !important;
+  border-radius: var(--radius-sm) !important;
+  color: #fca5a5 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 7px 18px !important;
+  letter-spacing: 0.3px !important;
+  cursor: pointer !important;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+[data-testid="stFileUploadDropzone"] button:hover {
+  background: rgba(220,38,38,0.22) !important;
+  border-color: rgba(220,38,38,0.55) !important;
+  color: #ffffff !important;
+}
+
+/* The "(or drag and drop)" / "200MB per file • PDF" helper text */
+[data-testid="stFileUploadDropzone"] small,
+[data-testid="stFileUploadDropzone"] span {
   color: var(--text-dim) !important;
   font-size: 11px !important;
+}
+
+/* Drop icon — the arrow-up cloud icon Streamlit injects */
+[data-testid="stFileUploadDropzone"] svg {
+  color: rgba(220,38,38,0.50) !important;
+  margin-bottom: 6px !important;
 }
 
 /* ============================================================
