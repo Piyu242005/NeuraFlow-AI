@@ -22,8 +22,11 @@ fallback_rate = db.get_fallback_rate()
 avg_sim = db.get_average_similarity()
 rag_df = db.get_rag_performance_df()
 avg_rag = rag_df["rag_time"].mean() if not rag_df.empty else 0.0
+
+# Define memory/streaming telemetry before any section can reference it.
 memory_hits, memory_tokens, memory_turns = db.get_memory_stats()
 avg_first_token, avg_tps, stream_success_rate = db.get_streaming_stats()
+
 total_searches = db.get_total_searches()
 avg_search_time = db.get_average_search_time()
 qdf = db.get_query_volume_df()
