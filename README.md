@@ -123,23 +123,13 @@ Run:
 pytest -q
 ```
 
-The evaluator measures:
-
-- retrieval recall
-- answer-term precision
-- combined regression score
-
-For serious production evaluation, extend the dataset with human labels for relevance, faithfulness, correctness and hallucination rate.
+The evaluator measures retrieval recall, answer-term precision and a combined regression score. For serious production evaluation, extend the dataset with human labels for relevance, faithfulness, correctness and hallucination rate.
 
 ---
 
 ## 🔐 Security
 
-Security helpers are available in `services/security.py` for:
-
-- PDF extension/size/magic-byte validation
-- filename sanitization
-- common prompt-injection detection
+Security helpers are available in `services/security.py` for PDF validation, filename sanitization and common prompt-injection detection.
 
 These checks are signals and guardrails, not a complete security boundary. Tool authorization, authentication, rate limiting and secret management must remain enforced at the application/deployment layer.
 
@@ -147,15 +137,7 @@ These checks are signals and guardrails, not a complete security boundary. Tool 
 
 ## 📊 Observability
 
-The system already records analytics such as provider usage, latency, RAG timing, fallback rate and streaming performance. New provider-health and cost-tracking modules provide a foundation for an operations dashboard.
-
-Recommended production dashboard:
-
-```text
-Requests       | Success Rate | Avg Latency
-Fallback Rate  | Provider Cost| Tokens
-RAG Score      | Provider Health| Error Rate
-```
+The system records analytics such as provider usage, latency, RAG timing, fallback rate and streaming performance. Provider-health and cost-tracking modules provide a foundation for an operations dashboard.
 
 ---
 
@@ -165,19 +147,18 @@ RAG Score      | Provider Health| Error Rate
 git clone https://github.com/Piyu242005/NeuraFlow-AI.git
 cd NeuraFlow-AI
 python -m venv .venv
-```
-
-Activate the environment and install:
-
-```bash
 pip install -r requirements.txt
 ```
 
 Create `.env` from `.env.example` and configure the providers you want to use.
 
+For portable Linux/Streamlit Cloud deployment, run:
+
 ```bash
-streamlit run app.py
+streamlit run streamlit_app.py
 ```
+
+The launcher normalizes the legacy Windows-local page-icon path in `app.py`.
 
 Never commit real API keys or credentials.
 
@@ -208,7 +189,8 @@ NeuraFlow-AI/
 │   ├── security.py
 │   └── task_classifier.py
 ├── tests/                   # Automated tests
-├── app.py                   # Streamlit application
+├── app.py                   # Existing Streamlit application
+├── streamlit_app.py         # Portable deployment entrypoint
 ├── requirements.txt
 └── README.md
 ```
@@ -217,30 +199,19 @@ NeuraFlow-AI/
 
 ## 🐳 Docker / ☸️ Kubernetes
 
-The repository includes Docker and Kubernetes deployment configuration.
+The repository includes Docker and Kubernetes deployment configuration. Before production deployment, configure a managed secret store, persistent vector storage, resource limits, health probes, TLS, authentication and rate limiting. Move multi-instance analytics from SQLite to PostgreSQL.
 
-Before production deployment:
-
-- configure a managed secret store
-- configure persistent vector storage
-- configure resource limits and health probes
-- secure ingress with TLS
-- add authentication and rate limiting
-- move multi-instance analytics from SQLite to PostgreSQL
-
-See [`docs/production-readiness.md`](docs/production-readiness.md) for the deployment checklist.
+See [`docs/production-readiness.md`](docs/production-readiness.md).
 
 ---
 
 ## 🔄 Quality Gates
 
-GitHub Actions now runs:
+GitHub Actions runs:
 
 ```text
 compileall → pytest → black → isort → flake8 → bandit
 ```
-
-This gives the repository a repeatable baseline for regression, formatting, linting and security checks.
 
 ---
 
@@ -270,7 +241,7 @@ This gives the repository a repeatable baseline for regression, formatting, lint
 
 **Active development — portfolio-grade AI engineering project.**
 
-NeuraFlow is intended to demonstrate practical knowledge of **RAG, LLM orchestration, reliability engineering, observability, evaluation and production-oriented AI architecture**.
+NeuraFlow demonstrates practical knowledge of **RAG, LLM orchestration, reliability engineering, observability, evaluation and production-oriented AI architecture**.
 
 ## 👨‍💻 Author
 
