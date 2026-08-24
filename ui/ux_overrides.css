@@ -1,0 +1,56 @@
+/* NeuraFlow AI — final UX polish overrides. Loaded by styles.py. */
+
+/* Reduce dashboard-like vertical waste and strengthen workspace hierarchy. */
+.nf-header { padding: 28px 32px 24px !important; margin-bottom: 18px !important; }
+.nf-header h1 { font-size: 36px !important; }
+.profile-card { margin-bottom: 0 !important; padding: 14px 18px !important; }
+.profile-avatar { width: 64px !important; height: 64px !important; }
+.section-label { margin-top: 16px !important; }
+
+/* Make the document workspace feel like the primary surface. */
+[data-testid="stFileUploadDropzone"] { min-height: 118px !important; }
+.file-card { margin-top: 8px !important; }
+
+/* Premium source cards. */
+.source-item {
+  display:flex; align-items:flex-start; gap:10px; padding:10px 12px;
+  margin:6px 0; background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.07); border-radius:10px;
+}
+.source-icon { flex-shrink:0; }
+.source-name { color:#f5f5f5; font-size:12px; font-weight:600; }
+.source-meta { color:#737373; font-size:10px; margin-top:2px; }
+.provider-badge {
+  display:inline-flex; align-items:center; padding:4px 9px; margin-bottom:6px;
+  border-radius:999px; background:rgba(220,38,38,.08);
+  border:1px solid rgba(220,38,38,.18); color:#fca5a5; font-size:10px;
+}
+
+/* Stronger agent composer hierarchy. */
+div[data-testid="stForm"] { position:sticky; bottom:12px; z-index:30; backdrop-filter:blur(14px); }
+div[data-testid="stForm"] .stTextInput input { min-height:52px !important; }
+div[data-testid="stForm"] [data-testid="stFormSubmitButton"] button { min-height:44px !important; }
+
+/* Keep Streamlit's native toolbar/icons untouched. */
+[data-testid="stToolbar"] *, [data-testid="stHeader"] * { font-family:inherit !important; }
+[data-testid="stIconMaterial"], [class*="material-symbols"] { font-family:"Material Symbols Rounded","Material Symbols Outlined",sans-serif !important; }
+
+/* Better focus visibility. */
+button:focus-visible, input:focus-visible, textarea:focus-visible, [role="slider"]:focus-visible {
+  outline:2px solid #ef4444 !important; outline-offset:2px !important;
+}
+
+/* Avoid horizontal overflow. */
+.stApp, .main, [data-testid="stAppViewContainer"] { overflow-x:hidden !important; }
+
+/* Mobile workspace. */
+@media (max-width: 768px) {
+  .nf-header { margin-left:-.9rem !important; margin-right:-.9rem !important; padding:26px 16px 22px !important; }
+  .nf-header h1 { font-size:30px !important; }
+  .profile-card { gap:12px !important; }
+  .profile-avatar { width:52px !important; height:52px !important; }
+  .profile-name { font-size:16px !important; }
+  .profile-bio { font-size:11px !important; }
+  div[data-testid="stForm"] { bottom:6px; padding:10px !important; }
+  div[data-testid="stForm"] [data-testid="stHorizontalBlock"] { gap:5px !important; }
+}
