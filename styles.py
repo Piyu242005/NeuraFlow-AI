@@ -9,45 +9,38 @@ def get_css() -> str:
    DESIGN TOKENS  ·  black / red
    ============================================================ */
 :root {
-  --bg:          #0a0a0a;
-  --surface:     #111111;
-  --surface2:    #1a1a1a;
-  --border:      rgba(255,255,255,0.07);
-  --primary:     #dc2626;
-  --accent:      #b91c1c;
-  --text:        #f5f5f5;
-  --text-muted:  #a3a3a3;
-  --text-dim:    #525252;
-  --success:     #22c55e;
-  --warning:     #f59e0b;
-  --radius-sm:   6px;
-  --radius:      10px;
-  --radius-lg:   14px;
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #1a1a1a;
+  --border: rgba(255,255,255,0.07);
+  --primary: #dc2626;
+  --accent: #b91c1c;
+  --text: #f5f5f5;
+  --text-muted: #a3a3a3;
+  --text-dim: #525252;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
 }
 
-/* ============================================================
-   FONT
-   ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-*, *::before, *::after {
+/* Do not override Streamlit's internal icon font. */
+body, .stApp, .stMarkdown, .stText, .stCaption,
+input, textarea, button, select {
   font-family: Inter, -apple-system, system-ui, sans-serif !important;
-  box-sizing: border-box;
 }
 
 /* ============================================================
    APP BASE
    ============================================================ */
-.stApp {
-  background: var(--bg) !important;
-  color: var(--text) !important;
-}
+.stApp { background: var(--bg) !important; color: var(--text) !important; }
+#MainMenu { visibility: visible !important; display: block !important; }
+header { visibility: visible !important; display: block !important; background: transparent !important; }
+footer { visibility: hidden !important; }
 
-#MainMenu  { visibility: visible !important; display: block !important; }
-header     { visibility: visible !important; display: block !important; background: transparent !important; }
-footer     { visibility: hidden !important; }
-
-/* Remove ALL top padding from main block so header sits flush */
 .block-container {
   padding-top: 0 !important;
   padding-left: 2rem !important;
@@ -55,15 +48,38 @@ footer     { visibility: hidden !important; }
   padding-bottom: 4rem !important;
   max-width: 1400px !important;
 }
-
-/* Also kill the default Streamlit inner-block top margin */
-.block-container > div:first-child {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
+.block-container > div:first-child { margin-top: 0 !important; padding-top: 0 !important; }
 
 /* ============================================================
-   INTERACTION SAFETY  —  never block inputs
+   STREAMLIT NATIVE ICONS — preserve Material Symbols
+   ============================================================ */
+[data-testid="stIconMaterial"],
+[data-testid="stIconMaterial"]::before,
+[data-testid="stIconMaterial"]::after,
+.material-symbols-rounded,
+.material-symbols-outlined,
+[class*="material-symbols"] {
+  font-family: "Material Symbols Rounded", "Material Symbols Outlined", sans-serif !important;
+}
+
+[data-testid="stToolbar"],
+[data-testid="stToolbar"] button,
+[data-testid="stToolbar"] [role="button"],
+[data-testid="stHeader"] button,
+[data-testid="stHeader"] [role="button"] {
+  font-family: "Material Symbols Rounded", "Material Symbols Outlined", sans-serif !important;
+}
+
+/* Never inject generated text into native Streamlit controls. */
+[data-testid="stToolbar"]::before,
+[data-testid="stToolbar"]::after,
+[data-testid="stHeader"]::before,
+[data-testid="stHeader"]::after,
+[data-testid="stIconMaterial"]::before,
+[data-testid="stIconMaterial"]::after { content: none !important; }
+
+/* ============================================================
+   INTERACTION SAFETY — never block inputs
    ============================================================ */
 .stTextInput,
 .stTextInput > div,
@@ -72,24 +88,15 @@ footer     { visibility: hidden !important; }
 .stTextArea textarea,
 [data-testid="stChatInput"],
 [data-testid="stChatInput"] *,
-button, input, textarea, select {
+button, input, textarea, select, [role="slider"] {
   pointer-events: auto !important;
   user-select: text !important;
 }
-
-.stTextInput, .stTextArea, [data-testid="stChatInput"] {
-  position: relative !important;
-  z-index: 20 !important;
-}
-
-.stTextInput input,
-.stTextArea textarea,
-[data-testid="stChatInput"] textarea {
-  caret-color: var(--text) !important;
-}
+.stTextInput, .stTextArea, [data-testid="stChatInput"] { position: relative !important; z-index: 20 !important; }
+.stTextInput input, .stTextArea textarea, [data-testid="stChatInput"] textarea { caret-color: var(--text) !important; }
 
 /* ============================================================
-   SIDEBAR  —  solid black shell
+   SIDEBAR
    ============================================================ */
 section[data-testid="stSidebar"] {
   background: #0a0a0a !important;
@@ -97,31 +104,12 @@ section[data-testid="stSidebar"] {
   width: 272px !important;
   box-shadow: none !important;
 }
-
-/* Zero out ALL default Streamlit padding inside sidebar */
-section[data-testid="stSidebar"] > div {
-  padding: 0 !important;
-}
-
-section[data-testid="stSidebar"] > div > div {
-  padding: 0 !important;
-  gap: 0 !important;
-}
-
-section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-  gap: 0 !important;
-  padding: 0 !important;
-}
-
-/* Kill the default margin on every stMarkdownContainer inside sidebar */
+section[data-testid="stSidebar"] > div { padding: 0 !important; }
+section[data-testid="stSidebar"] > div > div { padding: 0 !important; gap: 0 !important; }
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: 0 !important; padding: 0 !important; }
 section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
 section[data-testid="stSidebar"] .stMarkdown,
-section[data-testid="stSidebar"] .element-container {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Kill default paragraph margins inside sidebar */
+section[data-testid="stSidebar"] .element-container { margin: 0 !important; padding: 0 !important; }
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] .stCaption,
 section[data-testid="stSidebar"] .stMarkdown p {
@@ -149,92 +137,13 @@ section[data-testid="stSidebar"] .stRadio {
   padding: 0 !important;
 }
 
-/* ============================================================
-   SIDEBAR NAV  —  multipage navigation (top of sidebar)
-   ============================================================ */
-
-/* Wrapper that holds the page nav */
-[data-testid="stSidebarNav"] {
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
-}
-
-/* Each nav item li */
-[data-testid="stSidebarNav"] ul {
-  list-style: none !important;
-  padding: 6px 0 !important;
-  margin: 0 !important;
-}
-
-[data-testid="stSidebarNav"] li {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* The anchor link for each page */
-[data-testid="stSidebarNav"] a {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 8px 16px !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  text-decoration: none !important;
-  color: var(--text-dim) !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.2px !important;
-  transition: background 0.12s, color 0.12s !important;
-  background: transparent !important;
-}
-
-[data-testid="stSidebarNav"] a:hover {
-  background: rgba(220,38,38,0.07) !important;
-  color: var(--text-muted) !important;
-}
-
-/* Active / current page */
-[data-testid="stSidebarNav"] a[aria-current="page"] {
-  background: rgba(220,38,38,0.10) !important;
-  color: #fca5a5 !important;
-  border-left: 2px solid var(--primary) !important;
-  padding-left: 14px !important;
-}
-
-/* Page icon (emoji or svg beside the name) */
-[data-testid="stSidebarNav"] a span:first-child,
-[data-testid="stSidebarNav"] a img {
-  font-size: 14px !important;
-  width: 18px !important;
-  flex-shrink: 0 !important;
-}
-
-/* The grey "app" label pill that Streamlit renders above the nav */
-[data-testid="stSidebarNav"]::before,
-[data-testid="stSidebarNavSeparator"] {
-  display: none !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* Kill the grey rounded pill / header entirely */
-section[data-testid="stSidebar"] > div [data-testid="stSidebarNav"] > div:first-child,
-section[data-testid="stSidebar"] [class*="sidebarNavHeader"],
-section[data-testid="stSidebar"] [class*="NavHeader"] {
-  display: none !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
 section[data-testid="stSidebar"] .stCheckbox label {
   color: var(--text-muted) !important;
   font-size: 12px !important;
 }
 
 /* ============================================================
-   SIDEBAR  —  panel blocks
+   MAIN
    ============================================================ */
 
 /* shared panel style: thin bottom border, consistent padding */
@@ -575,309 +484,60 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
-   FILE UPLOADER  —  premium drag-drop zone, no duplicate text
+   FILE UPLOADER  —  hide duplicate "Browse files" text label
    ============================================================ */
-
-/* Outer dropzone wrapper */
 [data-testid="stFileUploadDropzone"] {
-  background: rgba(220,38,38,0.04) !important;
-  border: 2px dashed rgba(220,38,38,0.30) !important;
+  background: rgba(220,38,38,0.03) !important;
+  border: 2px dashed rgba(220,38,38,0.28) !important;
   border-radius: var(--radius) !important;
-  padding: 28px 20px !important;
-  text-align: center !important;
   transition: border-color 0.18s, background 0.18s;
-  cursor: pointer !important;
 }
 
 [data-testid="stFileUploadDropzone"]:hover {
-  border-color: rgba(220,38,38,0.65) !important;
-  background: rgba(220,38,38,0.07) !important;
-}
-
-/* Hide the default Streamlit "Browse files" / "Upload" button entirely —
-   it renders as a styled button that duplicates the label text */
-[data-testid="stFileUploadDropzone"] button {
-  /* Replace with a clean upload CTA */
-  background: rgba(220,38,38,0.12) !important;
-  border: 1px solid rgba(220,38,38,0.35) !important;
-  border-radius: var(--radius-sm) !important;
-  color: #fca5a5 !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  padding: 7px 18px !important;
-  letter-spacing: 0.3px !important;
-  cursor: pointer !important;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-[data-testid="stFileUploadDropzone"] button:hover {
-  background: rgba(220,38,38,0.22) !important;
   border-color: rgba(220,38,38,0.55) !important;
-  color: #ffffff !important;
+  background: rgba(220,38,38,0.06) !important;
 }
 
-/* The "(or drag and drop)" / "200MB per file • PDF" helper text */
-[data-testid="stFileUploadDropzone"] small,
-[data-testid="stFileUploadDropzone"] span {
+/* The inner upload button — suppress the plain-text label that doubles */
+[data-testid="stFileUploadDropzone"] small {
   color: var(--text-dim) !important;
   font-size: 11px !important;
 }
 
-/* Drop icon — the arrow-up cloud icon Streamlit injects */
-[data-testid="stFileUploadDropzone"] svg {
-  color: rgba(220,38,38,0.50) !important;
-  margin-bottom: 6px !important;
+/* generic cards/chats/composer */
+.file-card { background:rgba(34,197,94,.07); border:1px solid rgba(34,197,94,.22); border-radius:12px; padding:14px 16px; display:flex; align-items:center; gap:12px; margin-top:10px; }
+.file-name { font-size:13px; font-weight:600; color:var(--text); overflow-wrap:anywhere; }
+.file-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
+[data-testid="stChatMessage"] { border-radius:14px !important; margin:8px 0 !important; }
+[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] { line-height:1.7 !important; }
+div[data-testid="stForm"] { background:rgba(255,255,255,.025) !important; border:1px solid rgba(220,38,38,.16) !important; border-radius:16px !important; padding:14px !important; }
+div[data-testid="stForm"] .stTextInput input { min-height:48px !important; padding:0 16px !important; border-radius:12px !important; background:rgba(0,0,0,.18) !important; }
+.stTextInput input,.stTextArea textarea { background:rgba(255,255,255,.04) !important; border:1px solid rgba(255,255,255,.09) !important; border-radius:12px !important; color:var(--text) !important; font-size:14px !important; }
+.stTextInput input:focus,.stTextArea textarea:focus { border-color:var(--primary) !important; box-shadow:0 0 0 3px rgba(220,38,38,.12) !important; }
+[data-testid="stMetric"] { background:rgba(255,255,255,.025) !important; border:1px solid rgba(255,255,255,.06) !important; border-radius:12px !important; padding:12px !important; }
+[data-testid="stMetricLabel"] { color:var(--text-dim) !important; }
+[data-testid="stMetricValue"] { color:var(--text) !important; }
+.stButton>button,[data-testid="stFormSubmitButton"] button { border-radius:10px !important; font-weight:600 !important; font-size:13px !important; }
+.stButton>button[kind="primary"],[data-testid="stFormSubmitButton"] button[kind="primary"] { background:linear-gradient(135deg,#dc2626,#991b1b) !important; border:none !important; color:#fff !important; }
+.badge { display:inline-flex; gap:6px; padding:4px 12px; border-radius:16px; font-size:11px; font-weight:700; background:rgba(220,38,38,.08); border:1px solid rgba(220,38,38,.18); color:#fca5a5; }
+.empty-state { text-align:center; padding:60px 24px; }
+.empty-state .icon { font-size:52px; }
+.empty-state h3 { color:#d4d4d4 !important; }
+.empty-state p { color:#737373 !important; }
+hr { border-color:rgba(255,255,255,.05) !important; }
+
+@media (max-width:768px) {
+  .block-container { padding:0 .9rem 2rem !important; }
+  .nf-header { margin:0 -.9rem 20px; padding:32px 18px 28px; }
+  .nf-header h1 { font-size:34px !important; }
+  section[data-testid="stSidebar"] { width:300px !important; }
 }
 
-/* ============================================================
-   DOCUMENT CARD
-   ============================================================ */
-.file-card {
-  background: rgba(34,197,94,0.05);
-  border: 1px solid rgba(34,197,94,0.18);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 10px;
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation:none !important; transition:none !important; }
 }
 
-.file-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  overflow-wrap: anywhere;
-}
-
-.file-meta {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 3px;
-}
-
-/* ============================================================
-   METRICS
-   ============================================================ */
-[data-testid="stMetric"] {
-  background: var(--surface) !important;
-  border: 1px solid rgba(255,255,255,0.06) !important;
-  border-radius: var(--radius) !important;
-  padding: 12px !important;
-}
-
-[data-testid="stMetricLabel"] { color: var(--text-dim) !important; }
-[data-testid="stMetricValue"] { color: var(--text) !important; }
-
-/* ============================================================
-   CHAT MESSAGES
-   ============================================================ */
-.stChatMessage[data-testid="stChatMessageUser"] {
-  flex-direction: row-reverse !important;
-}
-
-.stChatMessage[data-testid="stChatMessageUser"] > div {
-  background: var(--primary) !important;
-  border-radius: 14px 14px 3px 14px !important;
-  max-width: 78% !important;
-}
-
-.stChatMessage[data-testid="stChatMessageAssistant"] > div {
-  background: var(--surface) !important;
-  border: 1px solid rgba(255,255,255,0.07) !important;
-  border-radius: 3px 14px 14px 14px !important;
-  max-width: 85% !important;
-}
-
-/* ============================================================
-   FORM & INPUT
-   ============================================================ */
-div[data-testid="stForm"] {
-  background: var(--surface) !important;
-  border: 1px solid rgba(220,38,38,0.16) !important;
-  border-radius: var(--radius-lg) !important;
-  padding: 14px !important;
-}
-
-.stTextInput input,
-.stTextArea textarea {
-  background: var(--surface2) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  border-radius: var(--radius) !important;
-  color: var(--text) !important;
-  font-size: 14px !important;
-}
-
-.stTextInput input:focus,
-.stTextArea textarea:focus {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 2px rgba(220,38,38,0.12) !important;
-  outline: none !important;
-}
-
-div[data-testid="stForm"] .stTextInput input {
-  min-height: 46px !important;
-  padding: 0 16px !important;
-}
-
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-.stButton > button,
-[data-testid="stFormSubmitButton"] button {
-  border-radius: var(--radius-sm) !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
-}
-
-.stButton > button[kind="primary"],
-[data-testid="stFormSubmitButton"] button[kind="primary"] {
-  background: var(--primary) !important;
-  border: none !important;
-  color: #fff !important;
-  padding: 10px 20px !important;
-}
-
-.stButton > button[kind="primary"]:hover,
-[data-testid="stFormSubmitButton"] button[kind="primary"]:hover {
-  background: var(--accent) !important;
-}
-
-.stButton > button[kind="secondary"],
-[data-testid="stFormSubmitButton"] button:not([kind="primary"]) {
-  background: var(--surface2) !important;
-  border: 1px solid rgba(255,255,255,0.09) !important;
-  color: var(--text-muted) !important;
-}
-
-/* ============================================================
-   RADIO + CHECKBOXES  (main area)
-   ============================================================ */
-.stRadio > div[role="radiogroup"] {
-  gap: 6px !important;
-  flex-wrap: wrap !important;
-}
-
-.stRadio > div[role="radiogroup"] > label {
-  background: var(--surface) !important;
-  border: 1px solid rgba(255,255,255,0.07) !important;
-  border-radius: var(--radius-sm) !important;
-  padding: 6px 12px !important;
-  color: var(--text-muted) !important;
-  font-size: 12px !important;
-}
-
-.stRadio > div[role="radiogroup"] > label:has(input:checked) {
-  background: rgba(220,38,38,0.10) !important;
-  border-color: rgba(220,38,38,0.35) !important;
-  color: #fca5a5 !important;
-}
-
-/* radio label text (the "Search Provider" heading Streamlit auto-renders) */
-.stRadio > label {
-  font-size: 9px !important;
-  font-weight: 800 !important;
-  color: var(--text-dim) !important;
-  letter-spacing: 1.6px !important;
-  text-transform: uppercase !important;
-}
-
-.stCheckbox label { color: var(--text-muted) !important; }
-
-/* ============================================================
-   TABS
-   ============================================================ */
-.stTabs [data-baseweb="tab-list"] {
-  background: var(--surface) !important;
-  border: 1px solid rgba(255,255,255,0.07) !important;
-  border-radius: var(--radius) !important;
-  padding: 3px !important;
-}
-
-.stTabs [data-baseweb="tab"] { color: var(--text-muted) !important; border-radius: var(--radius-sm) !important; }
-.stTabs [aria-selected="true"] {
-  background: rgba(220,38,38,0.15) !important;
-  color: #fca5a5 !important;
-}
-
-/* ============================================================
-   PROVIDER BADGE (chat)
-   ============================================================ */
-.provider-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 2px 8px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  background: rgba(220,38,38,0.10);
-  border: 1px solid rgba(220,38,38,0.22);
-  color: #fca5a5;
-  margin-bottom: 6px;
-}
-
-/* ============================================================
-   MISC
-   ============================================================ */
-.empty-state {
-  text-align: center;
-  padding: 48px 24px;
-}
-
-.empty-state .icon { font-size: 44px; }
-.empty-state h3 { color: var(--text-muted) !important; font-size: 16px !important; margin: 12px 0 5px !important; }
-.empty-state p  { color: var(--text-dim) !important; font-size: 13px !important; }
-
-hr { border-color: rgba(255,255,255,0.06) !important; }
-
-[data-testid="stExpander"] {
-  background: var(--surface) !important;
-  border: 1px solid rgba(255,255,255,0.06) !important;
-  border-radius: var(--radius) !important;
-}
-
-/* sources */
-.source-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 9px 11px;
-  background: var(--surface2);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: var(--radius-sm);
-  margin-bottom: 5px;
-}
-
-.source-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
-.source-name { font-size: 12px; font-weight: 600; color: var(--text); }
-.source-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: rgba(220,38,38,0.28); border-radius: 2px; }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 1024px) {
-  .block-container { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
-  .nf-header { padding: 28px 24px 22px; }
-}
-
-@media (max-width: 768px) {
-  .block-container { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
-  .nf-header { margin: 0 -0.75rem 18px; padding: 24px 16px 20px; }
-  .nf-header h1 { font-size: 28px !important; }
-  section[data-testid="stSidebar"] { width: 100% !important; }
-  .stChatMessage[data-testid="stChatMessageUser"] > div,
-  .stChatMessage[data-testid="stChatMessageAssistant"] > div { max-width: 92% !important; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-}
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-thumb { background:rgba(220,38,38,.28); border-radius:3px; }
 </style>
 """
