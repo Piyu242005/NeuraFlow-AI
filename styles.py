@@ -12,25 +12,46 @@ def get_css() -> str:
 .stTextInput,.stTextInput>div,.stTextInput input,.stTextArea,.stTextArea textarea,[data-testid="stChatInput"],[data-testid="stChatInput"] *,button,input,textarea,select,[role="slider"]{pointer-events:auto!important;user-select:text!important}
 .stTextInput,.stTextArea,[data-testid="stChatInput"]{position:relative!important;z-index:20!important}.stTextInput input,.stTextArea textarea,[data-testid="stChatInput"] textarea{caret-color:#E2E8F0!important}
 
-/* Premium sidebar */
-section[data-testid="stSidebar"]{background:linear-gradient(180deg,#090F1D 0%,#0C1222 48%,#080D18 100%)!important;border-right:1px solid rgba(139,92,246,.18)!important;width:292px!important;box-shadow:12px 0 40px rgba(0,0,0,.18)!important}
-section[data-testid="stSidebar"]>div{padding:1rem .85rem 1.1rem!important}
-section[data-testid="stSidebar"] [data-testid="stVerticalBlock"]{gap:.55rem!important}
-section[data-testid="stSidebar"] hr{margin:12px 0!important;border-color:rgba(255,255,255,.06)!important}
-section[data-testid="stSidebar"] h2{color:#F8FAFC!important;font-size:18px!important;letter-spacing:-.3px!important}
-section[data-testid="stSidebar"] h3{color:#CBD5E1!important;font-size:11px!important;letter-spacing:.9px!important;text-transform:uppercase!important}
-section[data-testid="stSidebar"] p,section[data-testid="stSidebar"] .stCaption{color:#94A3B8!important;font-size:12px!important;line-height:1.55!important}
-section[data-testid="stSidebar"] label{color:#64748B!important;font-size:10px!important;font-weight:700!important;letter-spacing:.7px!important;text-transform:uppercase!important}
-section[data-testid="stSidebar"] .stTextInput input{background:rgba(255,255,255,.045)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:10px!important;color:#CBD5E1!important;font-size:13px!important;min-height:40px!important}
-section[data-testid="stSidebar"] .stTextInput input:focus{border-color:rgba(139,92,246,.55)!important;box-shadow:0 0 0 3px rgba(139,92,246,.12)!important}
-section[data-testid="stSidebar"] .stButton>button{width:100%!important;text-align:left!important;justify-content:flex-start!important;background:rgba(255,255,255,.025)!important;border:1px solid rgba(255,255,255,.055)!important;color:#CBD5E1!important;border-radius:10px!important;min-height:40px!important;padding:8px 11px!important}
-section[data-testid="stSidebar"] .stButton>button:hover{background:rgba(139,92,246,.1)!important;border-color:rgba(139,92,246,.28)!important;color:#F1F5F9!important;transform:none!important;box-shadow:none!important}
+/* Modern sidebar */
+section[data-testid="stSidebar"]{background:linear-gradient(180deg,#070B16 0%,#0B1020 48%,#070B14 100%)!important;border-right:1px solid rgba(139,92,246,.20)!important;width:304px!important;box-shadow:18px 0 50px rgba(0,0,0,.25)!important}
+section[data-testid="stSidebar"]>div{padding:14px 12px 16px!important}
+section[data-testid="stSidebar"] [data-testid="stVerticalBlock"]{gap:.45rem!important}
+section[data-testid="stSidebar"] hr{margin:12px 4px!important;border-color:rgba(255,255,255,.065)!important}
+section[data-testid="stSidebar"] h2{color:#F8FAFC!important;font-size:18px!important;font-weight:800!important;letter-spacing:-.4px!important;margin:0!important}
+section[data-testid="stSidebar"] h3{color:#CBD5E1!important;font-size:10px!important;font-weight:800!important;letter-spacing:1.1px!important;text-transform:uppercase!important;margin:14px 5px 5px!important}
+section[data-testid="stSidebar"] p,section[data-testid="stSidebar"] .stCaption{color:#7F8CA3!important;font-size:11px!important;line-height:1.55!important}
+section[data-testid="stSidebar"] label{color:#64748B!important;font-size:9px!important;font-weight:800!important;letter-spacing:.8px!important;text-transform:uppercase!important}
+section[data-testid="stSidebar"] .stTextInput input{background:rgba(255,255,255,.035)!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:10px!important;color:#CBD5E1!important;font-size:12px!important;min-height:38px!important}
+section[data-testid="stSidebar"] .stTextInput input:focus{border-color:rgba(139,92,246,.55)!important;box-shadow:0 0 0 3px rgba(139,92,246,.10)!important}
+section[data-testid="stSidebar"] .stButton>button{width:100%!important;text-align:left!important;justify-content:flex-start!important;background:rgba(255,255,255,.025)!important;border:1px solid rgba(255,255,255,.055)!important;color:#CBD5E1!important;border-radius:10px!important;min-height:38px!important;padding:7px 10px!important;font-size:12px!important}
+section[data-testid="stSidebar"] .stButton>button:hover{background:rgba(139,92,246,.10)!important;border-color:rgba(139,92,246,.28)!important;color:#F8FAFC!important;transform:none!important;box-shadow:none!important}
 section[data-testid="stSidebar"] .stRadio>div[role="radiogroup"]{display:grid!important;grid-template-columns:1fr!important;gap:5px!important}
-section[data-testid="stSidebar"] .stRadio>div[role="radiogroup"]>label{background:rgba(255,255,255,.025)!important;border:1px solid rgba(255,255,255,.055)!important;border-radius:10px!important;padding:8px 10px!important;margin:0!important}
+section[data-testid="stSidebar"] .stRadio>div[role="radiogroup"]>label{background:rgba(255,255,255,.025)!important;border:1px solid rgba(255,255,255,.055)!important;border-radius:10px!important;padding:8px 10px!important;margin:0!important;color:#94A3B8!important}
 section[data-testid="stSidebar"] .stRadio>div[role="radiogroup"]>label:hover{background:rgba(139,92,246,.08)!important;border-color:rgba(139,92,246,.24)!important}
-.sidebar-brand{display:flex;align-items:center;gap:10px;padding:7px 7px 12px}.sidebar-brand-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#7C3AED,#2563EB);box-shadow:0 7px 22px rgba(124,58,237,.25);font-size:18px}.sidebar-brand-title{color:#F8FAFC;font-weight:800;font-size:16px}.sidebar-brand-sub{color:#64748B;font-size:10px;margin-top:2px}.sidebar-section{color:#64748B;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin:14px 8px 6px}.sidebar-card{background:linear-gradient(135deg,rgba(139,92,246,.1),rgba(59,130,246,.05));border:1px solid rgba(139,92,246,.16);border-radius:12px;padding:11px 12px;margin:3px 0 8px}.sidebar-card-title{color:#CBD5E1;font-size:12px;font-weight:700}.sidebar-card-meta{color:#64748B;font-size:10px;margin-top:3px}.sidebar-status{display:flex;align-items:center;gap:8px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.14);border-radius:10px;padding:9px 10px;margin-top:12px}.sidebar-status-dot{width:7px;height:7px;border-radius:50%;background:#10B981;box-shadow:0 0 8px rgba(16,185,129,.65)}.sidebar-status-text{color:#A7F3D0;font-size:11px;font-weight:600}
+section[data-testid="stSidebar"] .stRadio>div[role="radiogroup"]>label:has(input:checked){background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(37,99,235,.10))!important;border-color:rgba(139,92,246,.38)!important;color:#E9D5FF!important}
 
-/* Main */
+/* Make the existing sidebar markup look like a real AI workspace */
+section[data-testid="stSidebar"]>div>div:first-child{position:relative}
+section[data-testid="stSidebar"]>div>div:first-child:before{content:'AI DOCUMENT OS';display:block;color:#64748B;font-size:8px;font-weight:800;letter-spacing:1.6px;margin:0 5px 10px}
+section[data-testid="stSidebar"] h2:before{content:'✦';display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin-right:8px;border-radius:9px;background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;font-size:14px;vertical-align:middle;box-shadow:0 6px 18px rgba(124,58,237,.28)}
+section[data-testid="stSidebar"] h2{display:flex!important;align-items:center!important}
+section[data-testid="stSidebar"] h2 + p,section[data-testid="stSidebar"] h2 + div{margin-left:40px!important}
+section[data-testid="stSidebar"] h2 + p:after{content:'●  SYSTEM ONLINE';display:block;color:#6EE7B7;font-size:9px;font-weight:700;letter-spacing:.6px;margin-top:5px}
+section[data-testid="stSidebar"] h2 + p{font-size:10px!important;color:#64748B!important}
+section[data-testid="stSidebar"] h2 + p{max-width:205px}
+section[data-testid="stSidebar"] h2 + p{border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:13px}
+section[data-testid="stSidebar"] h2 + p + hr{margin-top:2px!important}
+section[data-testid="stSidebar"] h2 + p + hr + h2{margin-top:4px!important}
+section[data-testid="stSidebar"] h2 + p + hr + h2{background:rgba(255,255,255,.025);border:1px solid rgba(139,92,246,.12);border-radius:12px;padding:11px 12px!important}
+section[data-testid="stSidebar"] h2 + p + hr + h2:before{content:'◈';background:rgba(139,92,246,.12);box-shadow:none;color:#A78BFA}
+section[data-testid="stSidebar"] h2 + p + hr + h2 + p{background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.045);border-radius:0 0 11px 11px;padding:10px 11px!important;margin-top:-5px!important;margin-left:0!important}
+section[data-testid="stSidebar"] h3{position:relative}
+section[data-testid="stSidebar"] h3:before{content:'›';color:#8B5CF6;margin-right:5px}
+section[data-testid="stSidebar"] .stMarkdown ul{margin:4px 0 8px!important;padding:9px 12px 9px 27px!important;background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.045);border-radius:10px!important}
+section[data-testid="stSidebar"] .stMarkdown li{color:#AAB5C5!important;font-size:11px!important;padding:3px 0!important}
+section[data-testid="stSidebar"]>div>div:last-child{margin-top:8px!important}
+
+/* Main hero */
 .hero{background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(59,130,246,.08));border-bottom:1px solid rgba(139,92,246,.15);padding:48px 40px 40px;margin:0 -2rem 32px;text-align:center}.hero h1{font-size:46px!important;font-weight:800!important;letter-spacing:-1.5px!important;background:linear-gradient(135deg,#A78BFA,#818CF8 50%,#60A5FA);-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;margin-bottom:12px!important}.hero p{font-size:17px!important;color:#94A3B8!important;max-width:560px;margin:0 auto 28px!important;line-height:1.6!important}.stats-bar{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.stat-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:7px 16px;font-size:13px;color:#94A3B8}.stat-chip span{color:#A78BFA;font-weight:700}
 .stTabs [data-baseweb="tab-list"]{background:rgba(255,255,255,.03)!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:12px!important;padding:4px!important}.stTabs [data-baseweb="tab"]{color:#94A3B8!important;border-radius:8px!important}.stTabs [aria-selected="true"]{background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(59,130,246,.2))!important;color:#A78BFA!important}
 .stRadio>div[role="radiogroup"]{gap:6px!important;flex-wrap:wrap!important}.stRadio>div[role="radiogroup"]>label{background:rgba(255,255,255,.035)!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:10px!important;padding:7px 12px!important}.stCheckbox label{color:#CBD5E1!important}
