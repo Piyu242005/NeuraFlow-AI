@@ -29,7 +29,7 @@ load_dotenv(override=True)
 
 st.set_page_config(
     page_title="NeuraFlow AI · Multi-LLM Document Intelligence",
-    page_icon="assets/AI.svg",
+    page_icon="assets/PIYU_APP_ICONS_PNG/PIYU-AppIcon-180x180.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -47,8 +47,8 @@ def _b64(path: str) -> str:
         return base64.b64encode(f.read()).decode()
 
 
-logo_b64    = _b64("assets/AI.svg")
-logo_img    = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="36" style="vertical-align:middle;" />'
+logo_b64    = _b64("assets/PIYU_APP_ICONS_PNG/PIYU-icon-black_512x512.png")
+logo_img    = f'<img src="data:image/png;base64,{logo_b64}" width="36" style="vertical-align:middle;" />'
 robot_b64   = _b64("assets/happy-retro-robot.gif")
 
 # ── Provider registry ─────────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ with st.sidebar:
 # ╚══════════════════════════════════════════════════════════════════════════════
 
 # ── Section 1: Header ─────────────────────────────────────────────────────────
-logo_large = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="72" height="72" style="display:block;margin:0 auto 16px;" />'
+logo_large = f'<img src="data:image/png;base64,{logo_b64}" width="72" height="72" style="display:block;margin:0 auto 16px;" />'
 
 st.markdown(
     f"""
