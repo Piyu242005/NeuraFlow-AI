@@ -246,12 +246,12 @@ with st.sidebar:
 # ╚══════════════════════════════════════════════════════════════════════════════
 
 # ── Section 1: Header ─────────────────────────────────────────────────────────
+logo_large = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="72" height="72" style="display:block;margin:0 auto 16px;" />'
+
 st.markdown(
     f"""
     <div class="nf-header">
-      <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:10px;">
-        {logo_img}
-      </div>
+      {logo_large}
       <h1>NeuraFlow AI</h1>
       <p>Intelligent Multi-LLM Document Intelligence Platform</p>
       <div class="nf-badges">

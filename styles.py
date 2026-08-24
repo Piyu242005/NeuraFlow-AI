@@ -349,49 +349,48 @@ section[data-testid="stSidebar"] .stCheckbox label {
 }
 
 /* ============================================================
-   MAIN  —  header
+   MAIN  —  header  (large centered icon + bold white title, pic-1 style)
    ============================================================ */
 .nf-header {
-  padding: 28px 40px 24px;
-  margin: 0 -2rem 24px;
-  border-bottom: 1px solid rgba(220,38,38,0.15);
-  background: linear-gradient(135deg, rgba(220,38,38,0.07) 0%, rgba(0,0,0,0) 60%);
+  padding: 44px 40px 36px;
+  margin: 0 -2rem 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: #0d0d0d;
   text-align: center;
 }
 
-.nf-header h1 {
-  font-size: 36px !important;
-  font-weight: 800 !important;
-  letter-spacing: -1px !important;
-  color: #ffffff !important;
-  margin-bottom: 8px !important;
-}
+/* the 72px SVG img is already block + centred via inline style */
 
-/* red underline accent on title */
-.nf-header h1 span {
-  color: var(--primary) !important;
+.nf-header h1 {
+  font-size: 40px !important;
+  font-weight: 800 !important;
+  letter-spacing: -1.2px !important;
+  color: #ffffff !important;
+  margin: 0 0 10px !important;
+  line-height: 1.15 !important;
 }
 
 .nf-header p {
-  font-size: 14px !important;
+  font-size: 15px !important;
   color: var(--text-muted) !important;
-  margin: 0 0 18px !important;
+  margin: 0 0 24px !important;
+  line-height: 1.6 !important;
 }
 
 .nf-badges {
   display: flex;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .nf-badge {
-  background: rgba(220,38,38,0.08);
-  border: 1px solid rgba(220,38,38,0.22);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 11px;
-  color: #fca5a5;
+  padding: 5px 15px;
+  font-size: 12px;
+  color: #a3a3a3;
   font-weight: 500;
   letter-spacing: 0.2px;
 }
