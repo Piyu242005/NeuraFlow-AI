@@ -1,6 +1,6 @@
 """
 gemini_provider.py – Google Gemini adapter using the official google-genai SDK.
-Model: gemini-1.5-flash
+Model: Gemini 3.6 Flash.
 """
 
 import time
@@ -14,7 +14,7 @@ class GeminiProvider(BaseProvider):
     name = "Gemini"
     icon = "🔵"
     color = "#3b82f6"
-    model_id = "gemini-2.0-flash"
+    model_id = "gemini-3.6-flash"
 
     def __init__(self, api_key: str):
         self._api_key = api_key
@@ -54,12 +54,12 @@ class GeminiProvider(BaseProvider):
         first_token_time = 0.0
         full_text = []
 
-        stream = self._client.models.generate_content_stream(
-            model=self.model_id,
-            contents=prompt,
-        )
-
         try:
+            stream = self._client.models.generate_content_stream(
+                model=self.model_id,
+                contents=prompt,
+            )
+
             for chunk in stream:
                 content = chunk.text
                 if content:
