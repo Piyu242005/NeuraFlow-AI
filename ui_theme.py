@@ -15,15 +15,10 @@ GRID = "rgba(255,255,255,0.07)"
 
 
 def apply_theme() -> None:
-    """Apply the shared black/red visual system to a Streamlit page."""
-    st.markdown(
-        f"""
+    """Apply the shared Streamlit black/red visual system."""
+    st.markdown(f"""
 <style>
-:root {{
-  --nf-red: {RED}; --nf-red-dark: {RED_DARK}; --nf-red-light: {RED_LIGHT};
-  --nf-black: {BLACK}; --nf-surface: {SURFACE}; --nf-surface-2: {SURFACE_2};
-  --nf-text: {TEXT}; --nf-muted: {MUTED};
-}}
+:root {{ --nf-red:{RED}; --nf-red-dark:{RED_DARK}; --nf-red-light:{RED_LIGHT}; --nf-black:{BLACK}; --nf-surface:{SURFACE}; --nf-surface-2:{SURFACE_2}; --nf-text:{TEXT}; --nf-muted:{MUTED}; }}
 .stApp {{ background:{BLACK} !important; color:{TEXT} !important; }}
 header {{ background:transparent !important; }}
 #MainMenu {{ visibility:visible !important; display:block !important; }}
@@ -39,36 +34,38 @@ section[data-testid="stSidebarNav"] a[aria-current="page"] {{ background:linear-
 section[data-testid="stSidebarNav"] a[aria-current="page"] span {{ color:#fff !important; }}
 section[data-testid="stSidebarNav"] div[data-testid="stSidebarNavSeparator"] {{ border-color:rgba(255,255,255,.07) !important; }}
 
-/* Common page header */
+/* Common page shell */
 .nf-page-header {{ display:flex;align-items:center;gap:14px;padding:18px 20px;margin-bottom:18px;background:linear-gradient(135deg,rgba(220,38,38,.10),rgba(0,0,0,.20));border:1px solid rgba(220,38,38,.18);border-radius:14px; }}
 .nf-page-icon {{ width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:linear-gradient(135deg,{RED},{RED_DARK});font-size:21px;box-shadow:0 8px 22px rgba(220,38,38,.22); }}
 .nf-page-title {{ font-size:25px;font-weight:800;color:#fff;letter-spacing:-.5px;margin:0; }}
 .nf-page-subtitle {{ font-size:12px;color:{MUTED};margin:3px 0 0; }}
 
-/* KPI cards */
+/* KPI / controls */
 [data-testid="stMetric"] {{ background:{SURFACE} !important;border:1px solid rgba(255,255,255,.07) !important;border-radius:11px !important;padding:13px 15px !important; }}
 [data-testid="stMetricLabel"] {{ color:{MUTED} !important; }}
 [data-testid="stMetricValue"] {{ color:#fff !important; }}
 [data-testid="stMetricDelta"] {{ color:{RED_LIGHT} !important; }}
-
-/* Controls */
 .stButton > button,.stDownloadButton > button {{ border-radius:8px !important;border-color:rgba(220,38,38,.28) !important; }}
 .stButton > button:hover,.stDownloadButton > button:hover {{ border-color:{RED} !important;color:#fff !important;background:rgba(220,38,38,.10) !important; }}
 input:focus,textarea:focus {{ border-color:{RED} !important;box-shadow:0 0 0 2px rgba(220,38,38,.12) !important; }}
-
-/* Alerts/status use red-neutral language rather than green/blue accents */
-.stAlert {{ background:{SURFACE} !important;border-color:rgba(220,38,38,.20) !important; }}
-.stSuccess,.stInfo,.stWarning,.stError {{ border-color:rgba(220,38,38,.25) !important; background:rgba(220,38,38,.05) !important; }}
-
-/* Tables/cards */
+.stAlert,.stSuccess,.stInfo,.stWarning,.stError {{ border-color:rgba(220,38,38,.25) !important;background:rgba(220,38,38,.05) !important; }}
 [data-testid="stDataFrame"] {{ border:1px solid rgba(255,255,255,.07) !important;border-radius:10px !important;overflow:hidden !important; }}
+
+/* Normalize legacy analytics inline accents */
+.analytics-online-dot,.dot-on {{ background:{RED} !important; box-shadow:0 0 8px rgba(220,38,38,.65) !important; }}
+.metric-delta {{ color:{RED_LIGHT} !important; }}
+
+/* Plotly: red / dark-red only */
 .js-plotly-plot .plotly {{ border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden; }}
+.js-plotly-plot .scatterlayer .trace path {{ stroke:{RED} !important; }}
+.js-plotly-plot .barlayer .trace path {{ fill:{RED} !important; stroke:{RED_DARK} !important; }}
+.js-plotly-plot .pielayer .slice path {{ stroke:{BLACK} !important; }}
+.js-plotly-plot .pielayer .slice:nth-child(2n) path {{ fill:{RED} !important; }}
+.js-plotly-plot .pielayer .slice:nth-child(2n+1) path {{ fill:{RED_DARK} !important; }}
 
 @media (max-width:768px) {{ .block-container {{ padding:.8rem !important; }} .nf-page-header {{ padding:14px; }} .nf-page-title {{ font-size:21px; }} }}
 </style>
-""",
-        unsafe_allow_html=True,
-    )
+""", unsafe_allow_html=True)
 
 
 def plotly_layout(fig, height=320):
