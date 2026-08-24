@@ -23,7 +23,7 @@ class PolicyAgentEngine(AgentEngine):
             prompt=prompt, preferred_provider=preferred
         )
         from services.agent_engine import AgentDecision
-        return AgentDecision(
+        decision = AgentDecision(
             task_type=task_type,
             selected_provider=preferred,
             actual_provider=response.provider,
@@ -31,8 +31,9 @@ class PolicyAgentEngine(AgentEngine):
             response=response,
             fallback_log=fallback_log,
             fallback_used=response.fallback_used,
-            routing_score=score,
         )
+        decision.routing_score = score
+        return decision
 
     def run_stream(self, prompt: str, status_callback=None):
         task_type, preferred, reason, score = self._decision_target(prompt)
