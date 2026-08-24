@@ -8,6 +8,7 @@ import base64
 import hashlib
 import html
 import os
+import time
 from datetime import datetime
 
 import streamlit as st
@@ -34,104 +35,243 @@ st.set_page_config(
 )
 st.markdown(get_css(), unsafe_allow_html=True)
 
+# ── Singletons ────────────────────────────────────────────────────────────────
 telegram_logger = TelegramLogger()
-rag_manager = RAGManager()
-db_manager = DBManager()
-memory_manager = MemoryManager()
+rag_manager      = RAGManager()
+db_manager       = DBManager()
+memory_manager   = MemoryManager()
 
 
-def get_base64_image(file_path):
-    with open(file_path, "rb") as f:
+def _b64(path: str) -> str:
+    with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
 
-logo_b64 = get_base64_image("assets/AI.svg")
-logo_img = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="40" />'
+logo_b64 = _b64("assets/AI.svg")
+logo_img  = f'<img src="data:image/svg+xml;base64,{logo_b64}" width="36" style="vertical-align:middle;" />'
 
+# ── Provider registry ─────────────────────────────────────────────────────────
 PROVIDERS = {
-    "Auto Agent": {"icon": "🤖", "model": "Smart Router", "key_env": None},
-    "Groq": {"icon": "⚡", "model": "LLaMA 3.1 8B", "key_env": "GROQ_API_KEY"},
-    "Gemini": {"icon": "🔵", "model": "Gemini 3.6 Flash", "key_env": "GEMINI_API_KEY"},
-    "OpenRouter": {"icon": "🌐", "model": "LLaMA 3 8B", "key_env": "OPENROUTER_API_KEY"},
-    "Hugging Face": {"icon": "🤗", "model": "Zephyr 7B", "key_env": "HUGGINGFACE_API_KEY"},
+    "Auto Agent":    {"icon": "🤖", "model": "Smart Router",    "key_env": None},
+    "Groq":          {"icon": "⚡", "model": "LLaMA 3.1 8B",    "key_env": "GROQ_API_KEY"},
+    "Gemini":        {"icon": "🔵", "model": "Gemini Flash",     "key_env": "GEMINI_API_KEY"},
+    "OpenRouter":    {"icon": "🌐", "model": "LLaMA 3 8B",       "key_env": "OPENROUTER_API_KEY"},
+    "Hugging Face":  {"icon": "🤗", "model": "Zephyr 7B",        "key_env": "HUGGINGFACE_API_KEY"},
 }
 
-for key, val in {
+# ── Session state defaults ────────────────────────────────────────────────────
+_DEFAULTS = {
     "selected_provider": "Auto Agent",
-    "last_decision": None,
-    "chat_history": [],
-    "doc_text": "",
-    "file_name": "",
-    "last_rag_metrics": {},
-    "last_memory_metrics": {},
-    "last_search_telemetry": None,
-    "search_provider": "Auto",
-}.items():
-    if key not in st.session_state:
-        st.session_state[key] = val
+    "last_decision":     None,
+    "chat_history":      [],
+    "doc_text":          "",
+    "file_name":         "",
+    "last_rag_metrics":        {},
+    "last_memory_metrics":     {},
+    "last_search_telemetry":   None,
+    "search_provider":         "Auto",
+    "enable_tools":            True,
+    "show_reasoning":          False,
+    "index_metrics":           None,
+}
+for k, v in _DEFAULTS.items():
+    if k not in st.session_state:
+        st.session_state[k] = v
 
-with st.sidebar:
-    st.markdown(
-        f'<div style="display:flex;align-items:center;gap:10px;">{logo_img}<h2 style="margin:0;">NeuraFlow AI</h2></div>',
-        unsafe_allow_html=True,
-    )
-    st.caption("Intelligent Multi-LLM Document Agent Platform")
-    st.divider()
-
-    api_keys: dict = {}
-    for meta in PROVIDERS.values():
-        if meta["key_env"] is None:
-            continue
-        env_key = meta["key_env"]
-        try:
-            api_keys[env_key] = st.secrets[env_key] if env_key in st.secrets else os.getenv(env_key, "")
-        except Exception:
-            api_keys[env_key] = os.getenv(env_key, "")
-
-    st.markdown("## 📝 About")
-    st.markdown("NeuraFlow AI is a multi-LLM document intelligence platform with intelligent routing, RAG, agent tools, memory, and automatic provider fallback.")
-    st.markdown("### 🚀 Models")
-    st.markdown("- ⚡ Groq / LLaMA\n- 🔵 Gemini 3.6 Flash\n- 🌐 OpenRouter\n- 🤗 Hugging Face")
-    st.divider()
-    st.caption("🛡️ Autonomous Fallback & Recovery Engine | By Piyush Ramteke")
+# ── Resolve API keys ──────────────────────────────────────────────────────────
+api_keys: dict = {}
+for meta in PROVIDERS.values():
+    env_key = meta["key_env"]
+    if env_key is None:
+        continue
+    try:
+        api_keys[env_key] = st.secrets[env_key] if env_key in st.secrets else os.getenv(env_key, "")
+    except Exception:
+        api_keys[env_key] = os.getenv(env_key, "")
 
 providers = build_providers(api_keys)
 
-st.markdown(
-    f'''
-    <section class="hero animate">
-        <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:12px;">{logo_img}</div>
-        <h1>NeuraFlow AI</h1>
-        <p>Intelligent multi-LLM document intelligence with RAG, agent tools, memory and automatic routing.</p>
-        <div class="stats-bar">
-            <div class="stat-chip">Providers <span>4+</span></div>
-            <div class="stat-chip">RAG <span>Enabled</span></div>
-            <div class="stat-chip">Agent <span>ReAct</span></div>
-            <div class="stat-chip">Memory <span>Enabled</span></div>
+# ╔══════════════════════════════════════════════════════════════════════════════
+# ║  SIDEBAR
+# ╚══════════════════════════════════════════════════════════════════════════════
+with st.sidebar:
+    # ── Branding ──────────────────────────────────────────────────────────────
+    st.markdown(
+        f"""
+        <div class="sb-brand">
+          <div class="sb-brand-icon">{logo_img}</div>
+          <div>
+            <div class="sb-brand-title">NeuraFlow AI</div>
+            <div class="sb-brand-sub">AI Document OS</div>
+          </div>
         </div>
-    </section>
-    ''',
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── System status ─────────────────────────────────────────────────────────
+    st.markdown(
+        '<div class="sb-status"><span class="sb-status-dot"></span>System Online</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.divider()
+
+    # ── Workspace / current document ─────────────────────────────────────────
+    st.markdown('<div class="sb-section-title">Workspace</div>', unsafe_allow_html=True)
+
+    m = st.session_state.get("index_metrics")
+    file_name = st.session_state.get("file_name", "")
+
+    if file_name and m:
+        pages_val   = m.get("pages", "—")
+        chunks_val  = m.get("chunks", "—")
+        cache_label = "Cache Hit" if m.get("cache_hit") else "Indexed"
+        cache_color = "#10B981" if m.get("cache_hit") else "#F59E0B"
+        st.markdown(
+            f"""
+            <div class="sb-doc-card">
+              <div class="sb-doc-name">📄 {html.escape(file_name)}</div>
+              <div class="sb-doc-meta">
+                {pages_val} pages · {chunks_val} chunks<br>
+                <span style="color:{cache_color};font-weight:600;">{cache_label}</span>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            '<div class="sb-doc-card"><div class="sb-doc-meta" style="color:#475569;">No document loaded — upload a PDF to begin.</div></div>',
+            unsafe_allow_html=True,
+        )
+
+    st.divider()
+
+    # ── AI Engine ─────────────────────────────────────────────────────────────
+    st.markdown('<div class="sb-section-title">AI Engine</div>', unsafe_allow_html=True)
+
+    selected = st.radio(
+        "Provider",
+        list(PROVIDERS.keys()),
+        index=list(PROVIDERS.keys()).index(st.session_state.get("selected_provider", "Auto Agent")),
+        label_visibility="collapsed",
+        key="selected_provider",
+    )
+    mode = "auto" if selected == "Auto Agent" else selected
+
+    st.divider()
+
+    # ── Provider availability ─────────────────────────────────────────────────
+    st.markdown('<div class="sb-section-title">Providers</div>', unsafe_allow_html=True)
+
+    provider_rows = []
+    for pname, pmeta in PROVIDERS.items():
+        if pname == "Auto Agent":
+            continue
+        env_key = pmeta["key_env"]
+        is_online = bool(env_key and api_keys.get(env_key, ""))
+        dot_cls = "sb-dot-online" if is_online else "sb-dot-offline"
+        label_color = "#E2E8F0" if is_online else "#475569"
+        provider_rows.append(
+            f'<div class="sb-provider-row">'
+            f'<span class="{dot_cls}"></span>'
+            f'<span style="color:{label_color};">{pmeta["icon"]} {pname}</span>'
+            f'</div>'
+        )
+    st.markdown("".join(provider_rows), unsafe_allow_html=True)
+
+    st.divider()
+
+    # ── Capabilities ─────────────────────────────────────────────────────────
+    st.markdown('<div class="sb-section-title">Capabilities</div>', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="sb-caps">
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> RAG Retrieval</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Agent Tools</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Conversation Memory</div>
+          <div class="sb-cap-row"><span class="sb-cap-check">✓</span> Provider Fallback</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── Footer card ───────────────────────────────────────────────────────────
+    st.markdown(
+        """
+        <div class="sb-footer-card">
+          <div class="sb-footer-title">NeuraFlow AI</div>
+          <div class="sb-footer-meta">v2.0 · Built by Piyush</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# ╔══════════════════════════════════════════════════════════════════════════════
+# ║  MAIN WORKSPACE
+# ╚══════════════════════════════════════════════════════════════════════════════
+
+# ── Section 1: Header ─────────────────────────────────────────────────────────
+st.markdown(
+    f"""
+    <div class="nf-header">
+      <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:10px;">
+        {logo_img}
+      </div>
+      <h1>NeuraFlow AI</h1>
+      <p>Intelligent Multi-LLM Document Intelligence Platform</p>
+      <div class="nf-badges">
+        <span class="nf-badge">RAG</span>
+        <span class="nf-badge">Agent</span>
+        <span class="nf-badge">Memory</span>
+        <span class="nf-badge">Fallback</span>
+        <span class="nf-badge">4+ Providers</span>
+      </div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
-st.markdown('<div class="section-label">AI ROUTING</div>', unsafe_allow_html=True)
-selected = st.radio(
-    "Provider",
-    list(PROVIDERS.keys()),
-    index=0,
-    horizontal=True,
-    label_visibility="collapsed",
-    key="selected_provider",
-)
-mode = "auto" if selected == "Auto Agent" else selected
+# ── Section 2: AI Engine controls ─────────────────────────────────────────────
+st.markdown('<div class="section-label">AI Engine</div>', unsafe_allow_html=True)
+
 meta = PROVIDERS[selected]
-st.markdown(f'<div class="badge">{meta["icon"]} {selected} · {meta["model"]}</div>', unsafe_allow_html=True)
+is_auto = selected == "Auto Agent"
+
+engine_icon  = meta["icon"]
+engine_name  = selected
+engine_model = meta["model"]
+
+st.markdown(
+    f"""
+    <div class="engine-provider-info">
+      <span style="font-size:20px;">{engine_icon}</span>
+      <div>
+        <div class="engine-provider-name">{engine_name}</div>
+        <div class="engine-provider-model">{engine_model}</div>
+      </div>
+      <span class="engine-status-dot" title="Available"></span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 col_a, col_b = st.columns(2)
 with col_a:
-    enable_tools = st.checkbox("Enable Agent Tools (ReAct Mode)", value=True, help="Allows Web Search, Calculator and Document Search.")
+    enable_tools = st.checkbox(
+        "Agent Tools (ReAct)",
+        value=st.session_state.get("enable_tools", True),
+        help="Enables Web Search, Calculator and Document Search tools.",
+        key="enable_tools",
+    )
 with col_b:
-    show_reasoning = st.checkbox("Show Agent Reasoning", value=False, help="Shows the agent's tool/action process.")
+    show_reasoning = st.checkbox(
+        "Show Reasoning",
+        value=st.session_state.get("show_reasoning", False),
+        help="Displays the agent's intermediate reasoning steps.",
+        key="show_reasoning",
+    )
 
 search_provider = st.radio(
     "Search Provider",
@@ -141,147 +281,320 @@ search_provider = st.radio(
     key="search_provider",
 )
 
-st.markdown('<div class="section-label">DOCUMENT WORKSPACE</div>', unsafe_allow_html=True)
-uploaded = st.file_uploader("Upload a PDF", type="pdf", label_visibility="collapsed")
+# ── Section 3: Document Workspace ─────────────────────────────────────────────
+st.markdown('<div class="section-label">Document Workspace</div>', unsafe_allow_html=True)
+st.markdown(
+    '<p style="font-size:13px;color:#64748B;margin-bottom:10px;">Upload a PDF to start asking questions.</p>',
+    unsafe_allow_html=True,
+)
+
+uploaded = st.file_uploader(
+    "Upload PDF",
+    type="pdf",
+    label_visibility="collapsed",
+    help="PDF files only. Drag and drop or click to browse.",
+)
 
 if not uploaded:
     st.markdown(
-        '<div class="empty-state"><div class="icon">📄</div><h3>Upload a document to begin</h3><p>Drop a PDF here and NeuraFlow will index it for semantic Q&A.</p></div>',
+        """
+        <div class="empty-state">
+          <div class="icon">📄</div>
+          <h3>No document loaded</h3>
+          <p>Upload a PDF above to index it and start asking questions.</p>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
     st.stop()
 
+# ── Document processing ───────────────────────────────────────────────────────
 if uploaded.name != st.session_state.file_name:
     file_bytes = uploaded.getvalue()
-    file_hash = hashlib.md5(file_bytes, usedforsecurity=False).hexdigest()
-    st.session_state.file_name = uploaded.name
+    file_hash  = hashlib.md5(file_bytes, usedforsecurity=False).hexdigest()
+    st.session_state.file_name    = uploaded.name
     st.session_state.chat_history = []
-    reader = PdfReader(uploaded)
+
+    reader    = PdfReader(uploaded)
     num_pages = len(reader.pages)
 
     if rag_manager.is_indexed(file_hash):
         rag_manager.set_collection(f"doc_{file_hash}")
-        text = "".join(p.extract_text() for p in reader.pages if p.extract_text())
-        st.session_state.doc_text = text
-        st.session_state.index_metrics = {"chunks": "Cached", "embeddings": "Cached", "time": 0.0, "pages": num_pages, "cache_hit": True}
+        text = "".join(p.extract_text() or "" for p in reader.pages)
+        st.session_state.doc_text     = text
+        st.session_state.index_metrics = {
+            "chunks": "Cached", "embeddings": "Cached",
+            "time": 0.0, "pages": num_pages, "cache_hit": True,
+        }
     else:
         progress_bar = st.progress(0)
-        status = st.empty()
+        status_ph    = st.empty()
 
-        def update_progress(msg, pct):
-            status.info(msg)
+        def _update_progress(msg, pct):
+            status_ph.info(msg)
             progress_bar.progress(pct)
 
-        text = "".join(p.extract_text() for p in reader.pages if p.extract_text())
-        metadata = {"filename": uploaded.name, "pages": num_pages, "indexed_at": datetime.now().isoformat(), "hash": file_hash}
-        metrics = rag_manager.index_document(document_text=text, doc_hash=file_hash, metadata=metadata, progress_callback=update_progress)
-        st.session_state.doc_text = text
-        st.session_state.index_metrics = {"chunks": metrics["chunks"], "embeddings": metrics["embeddings"], "time": metrics["time"], "pages": num_pages, "cache_hit": False}
-        status.empty()
+        text = "".join(p.extract_text() or "" for p in reader.pages)
+
+        if not text.strip():
+            progress_bar.empty()
+            status_ph.empty()
+            st.error("⚠️ No extractable text found in this PDF. It may be image-based or corrupted.")
+            with st.expander("Technical details"):
+                st.write("PdfReader extracted 0 characters across all pages.")
+            st.stop()
+
+        metadata = {
+            "filename":   uploaded.name,
+            "pages":      num_pages,
+            "indexed_at": datetime.now().isoformat(),
+            "hash":       file_hash,
+        }
+        try:
+            metrics = rag_manager.index_document(
+                document_text=text,
+                doc_hash=file_hash,
+                metadata=metadata,
+                progress_callback=_update_progress,
+            )
+        except Exception as exc:
+            progress_bar.empty()
+            status_ph.empty()
+            st.error("❌ Document indexing failed.")
+            with st.expander("Technical details"):
+                st.exception(exc)
+            st.stop()
+
+        st.session_state.doc_text     = text
+        st.session_state.index_metrics = {
+            "chunks":     metrics["chunks"],
+            "embeddings": metrics["embeddings"],
+            "time":       metrics["time"],
+            "pages":      num_pages,
+            "cache_hit":  False,
+        }
+        status_ph.empty()
         progress_bar.empty()
         telegram_logger.log_upload(uploaded.name, uploaded.size, num_pages, file_bytes=file_bytes)
-        db_manager.log_document(filename=uploaded.name, pages=num_pages, chunks=metrics["chunks"], file_size=uploaded.size)
+        db_manager.log_document(
+            filename=uploaded.name, pages=num_pages,
+            chunks=metrics["chunks"], file_size=uploaded.size,
+        )
 
+# ── Document metrics card ─────────────────────────────────────────────────────
 m = st.session_state.get("index_metrics")
 if m:
-    safe_name = html.escape(uploaded.name)
+    safe_name   = html.escape(uploaded.name)
     cache_badge = "🟢 Cache Hit" if m["cache_hit"] else "🟡 Newly Indexed"
     st.markdown(
-        f'<div class="file-card"><div style="font-size:24px;">📄</div><div><div class="file-name">{safe_name}</div><div class="file-meta">{m["pages"]} pages · {cache_badge}</div></div></div>',
+        f"""
+        <div class="file-card">
+          <span style="font-size:26px;">📄</span>
+          <div>
+            <div class="file-name">{safe_name}</div>
+            <div class="file-meta">{m["pages"]} pages · {cache_badge}</div>
+          </div>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
     cols = st.columns(4)
-    cols[0].metric("Pages", m["pages"])
-    cols[1].metric("Chunks", m["chunks"])
+    cols[0].metric("Pages",      m["pages"])
+    cols[1].metric("Chunks",     m["chunks"])
     cols[2].metric("Embeddings", m["embeddings"])
-    cols[3].metric("Index Time", f'{m["time"]:.2f}s' if isinstance(m["time"], float) else m["time"])
+    index_time_val = f'{m["time"]:.2f}s' if isinstance(m["time"], float) else str(m["time"])
+    cols[3].metric("Index Time", index_time_val)
 
-with st.expander("Preview document text"):
-    preview = st.session_state.doc_text[:2000].strip()
-    st.write((preview + "…") if preview else "No extractable text was found in this PDF.")
+# ── Section 4: Document Preview ───────────────────────────────────────────────
+with st.expander("📖 Preview document"):
+    raw = st.session_state.doc_text[:2000].strip()
+    if raw:
+        st.write(raw + ("…" if len(st.session_state.doc_text) > 2000 else ""))
+    else:
+        st.info("No extractable text found in this PDF. It may be image-based.")
 
+# ── Section 5: Conversation ───────────────────────────────────────────────────
 if st.session_state.chat_history:
-    st.markdown('<div class="section-label">CONVERSATION</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-label">Conversation</div>', unsafe_allow_html=True)
     for msg in st.session_state.chat_history:
         if msg["role"] == "user":
             with st.chat_message("user"):
                 st.write(msg["content"])
         else:
             with st.chat_message("assistant"):
-                prov = msg.get("provider", "AI")
-                badge = f"Auto Agent → **{prov}**" if msg.get("mode") == "auto" else f"Powered by **{prov}**"
-                st.caption(badge)
+                prov      = msg.get("provider", "AI")
+                is_auto_m = msg.get("mode") == "auto"
+                badge_txt = f"Auto Agent → **{prov}**" if is_auto_m else f"**{prov}**"
+                latency   = msg.get("latency")
+                latency_txt = f" · {latency:.2f}s" if latency else ""
+                st.markdown(
+                    f'<span class="provider-badge">✦ NeuraFlow AI &nbsp;·&nbsp; {badge_txt}{latency_txt}</span>',
+                    unsafe_allow_html=True,
+                )
                 st.write(msg["content"])
+                # Show RAG sources if available
+                sources = msg.get("sources")
+                if sources and isinstance(sources, list) and len(sources) > 0:
+                    with st.expander(f"📚 Sources ({len(sources)})"):
+                        for src in sources:
+                            meta_s = src.get("metadata", {})
+                            fname  = html.escape(str(meta_s.get("filename", uploaded.name)))
+                            chunk  = meta_s.get("chunk_index", "?")
+                            score  = src.get("score", 0.0)
+                            st.markdown(
+                                f"""
+                                <div class="source-item">
+                                  <span class="source-icon">📄</span>
+                                  <div>
+                                    <div class="source-name">{fname}</div>
+                                    <div class="source-meta">Chunk {chunk} · Relevance {score:.2f}</div>
+                                  </div>
+                                </div>
+                                """,
+                                unsafe_allow_html=True,
+                            )
 
-st.markdown('<div class="section-label">ASK THE AGENT</div>', unsafe_allow_html=True)
+# ── Section 6 & 7: Ask the Agent ──────────────────────────────────────────────
+st.markdown('<div class="section-label">Ask the Agent</div>', unsafe_allow_html=True)
+
 with st.form("question_form", clear_on_submit=True, border=False):
     question = st.text_input(
         "Question",
-        placeholder="Ask anything about the document…",
+        placeholder="Ask anything about this document…",
         label_visibility="collapsed",
         autocomplete="off",
     )
     c1, c2, c3 = st.columns([3, 1.5, 1])
     with c1:
-        ask = st.form_submit_button("🚀 Ask Agent", type="primary", use_container_width=True)
+        ask = st.form_submit_button("Ask Agent ➤", type="primary", use_container_width=True)
     with c2:
         summarize = st.form_submit_button("📋 Summarize", use_container_width=True)
     with c3:
         clear = st.form_submit_button("🗑️ Clear", use_container_width=True)
 
 if clear:
-    st.session_state.chat_history = []
+    st.session_state.chat_history  = []
     st.session_state.last_decision = None
     st.rerun()
 
-final_q = question.strip() if ask and question.strip() else ("Provide a clear, concise summary of this document." if summarize else None)
-if ask and not question.strip():
-    st.warning("Please enter a question before asking the agent.")
+final_q = None
+if ask and question.strip():
+    final_q = question.strip()
+elif ask and not question.strip():
+    st.warning("⚠️ Please enter a question before submitting.")
+elif summarize:
+    final_q = "Provide a clear, concise summary of this document."
 
+# ── Execute query ──────────────────────────────────────────────────────────────
 if final_q:
     if not providers:
-        st.error("❌ No providers configured. Add at least one API key in the sidebar.")
+        st.error(
+            "❌ No AI providers are configured. "
+            "Add at least one API key (GEMINI_API_KEY, GROQ_API_KEY, etc.) to your `.env` file."
+        )
     else:
         agent = get_agent(providers, mode=mode)
         status_placeholder = st.empty()
 
-        def update_status(msg):
+        def _update_status(msg: str):
             status_placeholder.info(msg)
 
+        q_start = time.time()
+
         if enable_tools:
-            with st.spinner("🔍 Loading memory and tools…"):
-                mem_ctx, mem_tokens, mem_turns = memory_manager.get_context(st.session_state.chat_history, max_turns=3, max_tokens=1500)
-                st.session_state.last_memory_metrics = {"hit": mem_turns > 0, "tokens": mem_tokens, "turns": mem_turns}
+            with st.spinner("Loading memory and tools…"):
+                mem_ctx, mem_tokens, mem_turns = memory_manager.get_context(
+                    st.session_state.chat_history, max_turns=3, max_tokens=1500
+                )
+                st.session_state.last_memory_metrics = {
+                    "hit": mem_turns > 0, "tokens": mem_tokens, "turns": mem_turns,
+                }
                 st.session_state.last_rag_metrics = {"chunks": 0, "score": 0.0, "time": 0.0}
 
             st.session_state.last_search_telemetry = None
-            st.session_state.status_callback = update_status
+            st.session_state.status_callback       = _update_status
+
             tool_registry = ToolRegistry(rag_manager)
-            executor = AgentExecutor(agent, tool_registry)
-            wrapper = executor.run_react_stream(
+            executor      = AgentExecutor(agent, tool_registry)
+            wrapper       = executor.run_react_stream(
                 user_question=final_q,
                 memory_context=mem_ctx,
-                status_callback=update_status,
+                status_callback=_update_status,
                 show_reasoning=show_reasoning,
             )
-            assistant_text = st.write_stream(wrapper)
+
+            with st.chat_message("assistant"):
+                st.markdown(
+                    '<span class="provider-badge">✦ NeuraFlow AI</span>',
+                    unsafe_allow_html=True,
+                )
+                assistant_text = st.write_stream(wrapper)
+
             status_placeholder.empty()
             st.session_state.last_decision = executor.last_decision
+            sources_data = None
+
         else:
-            with st.spinner("🔍 Retrieving semantic context and memory…"):
+            with st.spinner("Retrieving semantic context…"):
                 context_str, sim_score, ret_time, n_chunks = rag_manager.retrieve_context(final_q)
-                mem_ctx, mem_tokens, mem_turns = memory_manager.get_context(st.session_state.chat_history, max_turns=3, max_tokens=1500)
-                st.session_state.last_rag_metrics = {"chunks": n_chunks, "score": sim_score, "time": ret_time}
+                sources_result = rag_manager.retrieve_with_sources(final_q)
+                mem_ctx, mem_tokens, mem_turns = memory_manager.get_context(
+                    st.session_state.chat_history, max_turns=3, max_tokens=1500
+                )
+                st.session_state.last_rag_metrics    = {"chunks": n_chunks, "score": sim_score, "time": ret_time}
                 st.session_state.last_memory_metrics = {"hit": mem_turns > 0, "tokens": mem_tokens, "turns": mem_turns}
 
-            prompt = f"You are an AI assistant. Answer the user's question using the Document Context below.\n\nDocument Context:\n{context_str}\n\n"
+            prompt = (
+                "You are an AI assistant. Answer the user's question using the Document Context below.\n\n"
+                f"Document Context:\n{context_str}\n\n"
+            )
             if mem_ctx:
                 prompt += f"Recent Conversation History:\n{mem_ctx}\n\n"
-            prompt += "Your response must be professional, concise, accurate, and user-focused. Use short paragraphs, bullet points when appropriate, and headings for long answers."
-            response = agent.invoke(prompt)
-            assistant_text = response.content if hasattr(response, "content") else str(response)
-            st.write(assistant_text)
+            prompt += (
+                "Your response must be professional, concise, accurate, and user-focused. "
+                "Use short paragraphs, bullet points when appropriate, and headings for long answers."
+            )
 
+            try:
+                response = agent.invoke(prompt)
+                assistant_text = response.content if hasattr(response, "content") else str(response)
+            except Exception as exc:
+                st.error("❌ The AI provider failed to respond.")
+                with st.expander("Technical details"):
+                    st.exception(exc)
+                assistant_text = ""
+
+            if assistant_text:
+                with st.chat_message("assistant"):
+                    st.markdown(
+                        '<span class="provider-badge">✦ NeuraFlow AI</span>',
+                        unsafe_allow_html=True,
+                    )
+                    st.write(assistant_text)
+
+            sources_data = sources_result.get("items", []) if sources_result else None
+
+            if sources_data:
+                with st.expander(f"📚 Sources ({len(sources_data)})"):
+                    for src in sources_data:
+                        meta_s = src.get("metadata", {})
+                        fname  = html.escape(str(meta_s.get("filename", uploaded.name)))
+                        chunk  = meta_s.get("chunk_index", "?")
+                        score  = src.get("score", 0.0)
+                        st.markdown(
+                            f"""
+                            <div class="source-item">
+                              <span class="source-icon">📄</span>
+                              <div>
+                                <div class="source-name">{fname}</div>
+                                <div class="source-meta">Chunk {chunk} · Relevance {score:.2f}</div>
+                              </div>
+                            </div>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+
+        # Normalise assistant_text
         if isinstance(assistant_text, list):
             assistant_text = "".join(str(x) for x in assistant_text)
         elif assistant_text is None:
@@ -289,20 +602,56 @@ if final_q:
         else:
             assistant_text = str(assistant_text)
 
-        provider_name = getattr(st.session_state.get("last_decision"), "provider", None) or selected
-        st.session_state.chat_history.append({"role": "user", "content": final_q})
-        st.session_state.chat_history.append({
-            "role": "assistant",
-            "content": assistant_text,
-            "provider": provider_name,
-            "mode": mode,
-        })
+        q_latency     = round(time.time() - q_start, 2)
+        provider_name = (
+            getattr(st.session_state.get("last_decision"), "actual_provider", None)
+            or selected
+        )
 
+        st.session_state.chat_history.append({"role": "user", "content": final_q})
+        assistant_record = {
+            "role":     "assistant",
+            "content":  assistant_text,
+            "provider": provider_name,
+            "mode":     mode,
+            "latency":  q_latency,
+        }
+        if not enable_tools and sources_data:
+            assistant_record["sources"] = sources_data
+        st.session_state.chat_history.append(assistant_record)
+
+        # Log telemetry
+        rag_m = st.session_state.get("last_rag_metrics", {})
+        mem_m = st.session_state.get("last_memory_metrics", {})
+        decision = st.session_state.get("last_decision")
+        fallback_used = getattr(decision, "fallback_used", False) if decision else False
+        db_manager.log_query(
+            provider=provider_name,
+            latency=q_latency,
+            rag_time=float(rag_m.get("time", 0.0)),
+            similarity_score=float(rag_m.get("score", 0.0)),
+            fallback_used=fallback_used,
+            memory_hit=bool(mem_m.get("hit", False)),
+            memory_tokens=int(mem_m.get("tokens", 0)),
+            chat_turns=int(mem_m.get("turns", 0)),
+        )
+
+# ── System diagnostics (collapsed by default) ──────────────────────────────────
 with st.expander("⚙️ System diagnostics"):
-    st.write({
-        "selected_provider": selected,
-        "search_provider": search_provider,
-        "agent_tools": enable_tools,
-        "memory": st.session_state.get("last_memory_metrics", {}),
-        "rag": st.session_state.get("last_rag_metrics", {}),
-    })
+    decision = st.session_state.get("last_decision")
+    diag = {
+        "selected_provider":  selected,
+        "search_provider":    search_provider,
+        "agent_tools":        enable_tools,
+        "memory":             st.session_state.get("last_memory_metrics", {}),
+        "rag":                st.session_state.get("last_rag_metrics", {}),
+    }
+    if decision:
+        diag["routing"] = {
+            "task_type":        getattr(decision, "task_type", "—"),
+            "selected":         getattr(decision, "selected_provider", "—"),
+            "actual":           getattr(decision, "actual_provider", "—"),
+            "reason":           getattr(decision, "reason", "—"),
+            "fallback_used":    getattr(decision, "fallback_used", False),
+        }
+    st.write(diag)
